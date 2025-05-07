@@ -1,5 +1,6 @@
 # Zumo
-Digital pin 15, or PB1, controls the right motor direction (LOW drives the motor forward, HIGH drives it in reverse). //
-Digital pin 16, or PB2, controls the left motor direction.   
-Digital pin 9, or PB5, controls the right motor speed with PWM //
-Digital pin 10, or PB6, controls the left motor speed with PWM //
+
+Het Zumo-project is een project vanuit De Haagse Hogeschool dat word gegeven in het tweede deel van het 2de semester. Bij dit project gaan we een [Zumo](https://www.pololu.com/category/129/zumo-robots-and-accessories) programmeren die een zwarte lijn moet volgen terwijl hij verschillende obstakels moet ontwijken. Deze Zumo heeft ook een Xbee op een adapterboard geïnstalleerd, waardoor we kunnen communiceren met de Zumo via een laptop en hem commando’s kunnen geven.
+
+## Waarom?
+dit project doen wij om te leren programeren in C++ en te werken met Klassen. verder leren wij ook samen te werken in Scrum
