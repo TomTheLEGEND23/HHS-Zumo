@@ -1,0 +1,111 @@
+#include "xbee.h"
+#include <iostream> // For placeholder diagnostic output
+
+// Constructor
+XBee::XBee() : lineFollowingProgramRunning(false) {
+    // Initialize Zumo control objects here if they were present
+    // motors = new ZumoMotors();
+    // buzzer = new ZumoBuzzer();
+    // display = new ZumoDisplay();
+    inputString.reserve(32); // Pre-allocate some space for the input string
+}
+
+// Initialize serial connection from onboard Xbee module to remote "RC" module for remote control and diagnostic information.
+void XBee::initializeSerial() {
+    Serial1.begin(9600);
+}
+
+// Method to receive a single character from XBee
+void XBee::receiveCharacter(char c) {
+    inputString += c;
+    // Optionally, process immediately if a newline or specific terminator is received
+    if (c == '\n') { // Assuming newline terminates a command
+        processReceivedData();
+    }
+}
+
+// Method to process the accumulated inputString
+void XBee::processReceivedData() {
+    if (inputString.empty()) {
+        return;
+    }
+
+    // For simplicity, we process the first character as a command.
+    // More complex parsing can be implemented if needed (e.g., multi-char commands or commands with arguments).
+    char command = inputString[0];
+
+    if (command == 'P') { // Start Program
+        startProgram();
+    } else if (command == 'O') { // Stop Program (Using 'O' for Off, as 'S' is for South/Backward and typical for gaming inspired controls)
+        stopProgram();
+    } else if (command == 'W') { // Move Forward
+        if (!lineFollowingProgramRunning) moveForward();
+    } else if (command == 'S') { // Move Backward
+        if (!lineFollowingProgramRunning) moveBackward();
+    } else if (command == 'A') { // Turn Left
+        if (!lineFollowingProgramRunning) turnLeft();
+    } else if (command == 'D') { // Turn Right
+        if (!lineFollowingProgramRunning) turnRight();
+    } else if (command == 'X') { // Send Diagnostics
+        sendDiagnostics();
+    } else {
+        // Unknown command
+        std::cout << "Unknown command: " << command << std::endl;
+    }
+
+    clearInputString(); // Clear buffer after processing
+}
+
+// Method to start the Zumo program
+void XBee::startProgram() {
+    lineFollowingProgramRunning = true;
+    std::cout << "Program started." << std::endl;
+}
+
+// Method to stop the Zumo program
+void XBee::stopProgram() {
+    lineFollowingProgramRunning = false;
+    std::cout << "Program stopped." << std::endl;
+}
+
+// Method to move the Zumo forward
+void XBee::moveForward() {
+    // std::cout << "Moving forward." << std::endl;
+}
+
+// Method to move the Zumo backward
+void XBee::moveBackward() {
+    // std::cout << "Moving backward." << std::endl;
+}
+
+// Method to turn the Zumo left
+void XBee::turnLeft() {
+    // std::cout << "Turning left." << std::endl;
+}
+
+// Method to turn the Zumo right
+void XBee::turnRight() {
+    // std::cout << "Turning right." << std::endl;
+}
+
+// Method to send diagnostic info back to the remote XBee
+void XBee::sendDiagnostics() {
+    // Ensure Serial1 is initialized in your setup code, e.g., Serial1.begin(9600);
+    
+    Serial1.println("--- Zumo Diagnostics ---");
+    Serial1.print("Program Running: ");
+    Serial1.println(lineFollowingProgramRunning ? "Yes" : "No");
+    Serial1.print("Input Buffer: ");
+    Serial1.println(inputString.c_str()); // Send the content of std::string
+    // Add more diagnostic info as needed (battery level (if possible), sensor readings from proximity sensor, line sensor, IMU, etc.)
+    // For example:
+    // Serial1.print("Battery Voltage: ");
+    // Serial1.println(readBatteryMillivolts());
+    Serial1.println("--- End Diagnostics ---");
+}
+
+// Helper to clear the input string
+void XBee::clearInputString() {
+    inputString.clear();
+}
+
