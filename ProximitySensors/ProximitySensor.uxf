@@ -1,0 +1,15 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>30</x><y>170</y><w>210</w><h>190</h></coordinates><panel_attributes>ProximitySensor
+--
++ LeftSensor
++ RightSensor
++ FrontSensor
+
+- frontSensorPin
+- leftSensorPin
+- rightSensorPin
+--
++ ProximitySensors()
++ PrintSensorValues()
++ ReadLeftSensor()
++ ReadRightSensor()
++ ReadFrontSensor()</panel_attributes><additional_attributes></additional_attributes></element></diagram>
