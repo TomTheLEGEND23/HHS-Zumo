@@ -4,37 +4,34 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>140</x>
-      <y>110</y>
-      <w>210</w>
-      <h>190</h>
+      <x>30</x>
+      <y>130</y>
+      <w>350</w>
+      <h>360</h>
     </coordinates>
-    <panel_attributes>Gyroscope
+    <panel_attributes>IMU
 --
--status():int
+-status : bool
+-AccelBiasX : float
+-AccelBiasY : float
+-AccelBiasZ : float
+-gyroBiasX : float
+-gyroBiasY : float
+-gyroBiasZ : float
+-magCalX : float
+-magCalY : float
 --
-+Gyrox():float
-+GyroY():float
-+Gyroz():float
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>380</x>
-      <y>110</y>
-      <w>210</w>
-      <h>190</h>
-    </coordinates>
-    <panel_attributes>Accelerometer
---
--status():int
---
-+Accelx():float
-+AccelY():float
-+AccelZ():float
-</panel_attributes>
++IMU(MagnetometerXOffset, MagnetometerYOffset)
++AccelX() float
++AccelY() float
++AccelZ() float
++GyroX() float
++GyroY() float
++GyroZ() float
++CompassHeading() float
++fetchStatus() bool
++pitch() float
++roll() float</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
