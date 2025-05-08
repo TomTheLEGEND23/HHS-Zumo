@@ -15,5 +15,5 @@ void setup() {
 }
 
 void loop() {
-motorLinks.setSnelheid(200);
+  motorLinks.setSnelheid(200);
 }
