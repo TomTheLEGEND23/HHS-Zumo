@@ -1,10 +1,22 @@
+/**
+ * @file ProximitySensors.ino
+ * @brief Test program for the Zumo robot's proximity sensors
+ * @author Tom Steenvoorden
+ * @date 2025-05-08
+ */
+
 #include <Wire.h>
 #include <Zumo32U4.h>
 #include "ProximitySensors.h"
 
-// Create proximity sensor object using your custom class
+/** @brief Create proximity sensor object using the custom class */
 ProximitySensors proxSensors;
 
+/**
+ * @brief Setup function that runs once at the start
+ * 
+ * Initializes serial communication and proximity sensors
+ */
 void setup()
 {
   // Initialize Serial for output
@@ -21,6 +33,11 @@ void setup()
   Serial.println("---------------------");
 }
 
+/**
+ * @brief Main loop that runs continuously
+ * 
+ * Reads sensors, prints values, and detects objects continuously
+ */
 void loop()
 {
   // Read the proximity sensors
