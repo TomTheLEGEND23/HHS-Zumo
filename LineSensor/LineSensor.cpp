@@ -1,7 +1,7 @@
 #include "LineSensor.h"
 #include <Arduino.h>
 
-LineSensor::LineSensor()
+LineSensor::lineSensors()
 {
     // Constructor
 }
