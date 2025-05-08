@@ -9,8 +9,8 @@ private:
     // Underlying Zumo32U4ProximitySensors object
     Zumo32U4ProximitySensors zumoProxSensors;
     
-    // Threshold value for detection
-    int detectionThreshold = 5;
+     // Default threshold Value for detection
+    int detectionThreshold = 4;
 
 public:
     // Constructor/destructor
@@ -35,4 +35,3 @@ public:
 };
 
 #endif // PROXIMITY_SENSORS_H
-

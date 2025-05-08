@@ -1,15 +1,14 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>30</x><y>170</y><w>210</w><h>190</h></coordinates><panel_attributes>ProximitySensor
+<diagram program="umletino" version="15.1"><zoom_level>14</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>98</x><y>182</y><w>294</w><h>266</h></coordinates><panel_attributes>Proximity Sensor
 --
-+ LeftSensor
-+ RightSensor
-+ FrontSensor
-
-- frontSensorPin
-- leftSensorPin
-- rightSensorPin
+- int detectionThreshold
 --
 + ProximitySensors()
-+ PrintSensorValues()
-+ ReadLeftSensor()
-+ ReadRightSensor()
-+ ReadFrontSensor()</panel_attributes><additional_attributes></additional_attributes></element></diagram>
++ void initSensors();
++ void read(); 
++ bool objectDetectedLeft();
++ bool objectDetectedRight();
++ bool objectDetectedFront();
++ void setDetectionThreshold(int threshold);
++ int getDetectionThreshold();
++ void printReadings();
+</panel_attributes><additional_attributes></additional_attributes></element></diagram>
