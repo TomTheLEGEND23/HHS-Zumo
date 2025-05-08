@@ -1,5 +1,4 @@
-#include "xbee.h"
-#include <iostream> // For placeholder diagnostic output
+#include "XBee.h"
 
 // Constructor
 XBee::XBee() : lineFollowingProgramRunning(false) {
@@ -7,7 +6,7 @@ XBee::XBee() : lineFollowingProgramRunning(false) {
     // motors = new ZumoMotors();
     // buzzer = new ZumoBuzzer();
     // display = new ZumoDisplay();
-    inputString.reserve(32); // Pre-allocate some space for the input string
+    // inputString.reserve(32); // Commented out as Arduino String handles memory dynamically
 }
 
 // Initialize serial connection from onboard Xbee module to remote "RC" module for remote control and diagnostic information.
@@ -17,16 +16,14 @@ void XBee::initializeSerial() {
 
 // Method to receive a single character from XBee
 void XBee::receiveCharacter(char c) {
-    inputString += c;
-    // Optionally, process immediately if a newline or specific terminator is received
-    if (c == '\n') { // Assuming newline terminates a command
-        processReceivedData();
-    }
+    // Process the character immediately as a command
+    inputString = c; // Store the single character as the input string
+    processReceivedData(); // Process the command immediately
 }
 
 // Method to process the accumulated inputString
 void XBee::processReceivedData() {
-    if (inputString.empty()) {
+    if (inputString.length() == 0) { // Changed from inputString.empty()
         return;
     }
 
@@ -36,21 +33,22 @@ void XBee::processReceivedData() {
 
     if (command == 'P') { // Start Program
         startProgram();
-    } else if (command == 'O') { // Stop Program (Using 'O' for Off, as 'S' is for South/Backward and typical for gaming inspired controls)
+    } else if ((command == 'O' ) || (command == 'o')) { // Stop Program (Using 'O' for Off, as 'S' is for South/Backward and typical for gaming inspired controls)
         stopProgram();
-    } else if (command == 'W') { // Move Forward
+    } else if ((command == 'W') || (command == 'w')) { // Move Forward
         if (!lineFollowingProgramRunning) moveForward();
-    } else if (command == 'S') { // Move Backward
+    } else if ((command == 'S') || (command == 's')) { // Move Backward
         if (!lineFollowingProgramRunning) moveBackward();
-    } else if (command == 'A') { // Turn Left
+    } else if ((command == 'A') || (command == 'a')) { // Turn Left
         if (!lineFollowingProgramRunning) turnLeft();
-    } else if (command == 'D') { // Turn Right
+    } else if ((command == 'D') || (command == 'd')) { // Turn Right
         if (!lineFollowingProgramRunning) turnRight();
-    } else if (command == 'X') { // Send Diagnostics
+    } else if ((command == 'X') || (command == 'x')) { // Send Diagnostics
         sendDiagnostics();
     } else {
         // Unknown command
-        std::cout << "Unknown command: " << command << std::endl;
+        Serial.print("Unknown command: ");
+        Serial.println(command); // Replaced std::cout with Serial.print/Serial.println
     }
 
     clearInputString(); // Clear buffer after processing
@@ -59,33 +57,33 @@ void XBee::processReceivedData() {
 // Method to start the Zumo program
 void XBee::startProgram() {
     lineFollowingProgramRunning = true;
-    std::cout << "Program started." << std::endl;
+    Serial.println("Program started."); // Replaced std::cout with Serial.println
 }
 
 // Method to stop the Zumo program
 void XBee::stopProgram() {
     lineFollowingProgramRunning = false;
-    std::cout << "Program stopped." << std::endl;
+    Serial.println("Program stopped."); // Replaced std::cout with Serial.println
 }
 
 // Method to move the Zumo forward
 void XBee::moveForward() {
-    // std::cout << "Moving forward." << std::endl;
+    Serial.println("Moving forward."); // Replaced std::cout with Serial.println
 }
 
 // Method to move the Zumo backward
 void XBee::moveBackward() {
-    // std::cout << "Moving backward." << std::endl;
+    Serial.println("Moving backward."); // Replaced std::cout with Serial.println
 }
 
 // Method to turn the Zumo left
 void XBee::turnLeft() {
-    // std::cout << "Turning left." << std::endl;
+    Serial.println("Turning left."); // Replaced std::cout with Serial.println
 }
 
 // Method to turn the Zumo right
 void XBee::turnRight() {
-    // std::cout << "Turning right." << std::endl;
+    Serial.println("Turning right."); // Replaced std::cout with Serial.println
 }
 
 // Method to send diagnostic info back to the remote XBee
@@ -106,6 +104,6 @@ void XBee::sendDiagnostics() {
 
 // Helper to clear the input string
 void XBee::clearInputString() {
-    inputString.clear();
+    inputString = ""; // Changed from inputString.clear()
 }
 

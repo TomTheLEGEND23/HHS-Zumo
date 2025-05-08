@@ -1,8 +1,7 @@
 #ifndef XBEE_H
 #define XBEE_H
-using namespace std;
 
-#include <string>
+#include <Arduino.h>
 
 // Forward declarations for Zumo control classes (not present, so commented out)
 // class ZumoMotors;
@@ -27,11 +26,11 @@ public:
     void turnRight();
     void sendDiagnostics(); // Method to send diagnostic info back
 
-private:
-    string inputString; // Stores incoming characters
-    bool lineFollowingProgramRunning;     // Tracks if line following program is active
-
     void clearInputString(); // Helper to clear the input string/character
+
+private:
+    String inputString; // Stores incoming characters
+    bool lineFollowingProgramRunning;     // Tracks if line following program is active
 };
 
 #endif // XBEE_H
