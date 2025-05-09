@@ -11,7 +11,7 @@ XBee::XBee() : lineFollowingProgramRunning(false) {
 
 // Initialize serial connection from onboard Xbee module to remote "RC" module for remote control and diagnostic information.
 void XBee::initializeSerial() {
-    Serial1.begin(9600);
+    Serial1.begin(19200);
 }
 
 // Method to receive a single character from XBee
@@ -31,7 +31,7 @@ void XBee::processReceivedData() {
     // More complex parsing can be implemented if needed (e.g., multi-char commands or commands with arguments).
     char command = inputString[0];
 
-    if (command == 'P') { // Start Program
+    if ((command == 'P') || (command == 'p')) { // Start Program
         startProgram();
     } else if ((command == 'O' ) || (command == 'o')) { // Stop Program (Using 'O' for Off, as 'S' is for South/Backward and typical for gaming inspired controls)
         stopProgram();
@@ -49,6 +49,8 @@ void XBee::processReceivedData() {
         // Unknown command
         Serial.print("Unknown command: ");
         Serial.println(command); // Replaced std::cout with Serial.print/Serial.println
+        Serial1.print("Unknown command: ");
+        Serial1.println(command); // Replaced std::cout with Serial.print/Serial.println
     }
 
     clearInputString(); // Clear buffer after processing
@@ -58,32 +60,38 @@ void XBee::processReceivedData() {
 void XBee::startProgram() {
     lineFollowingProgramRunning = true;
     Serial.println("Program started."); // Replaced std::cout with Serial.println
+    Serial1.println("Program started.");
 }
 
 // Method to stop the Zumo program
 void XBee::stopProgram() {
     lineFollowingProgramRunning = false;
     Serial.println("Program stopped."); // Replaced std::cout with Serial.println
+    Serial1.println("Program stopped.");
 }
 
 // Method to move the Zumo forward
 void XBee::moveForward() {
     Serial.println("Moving forward."); // Replaced std::cout with Serial.println
+    Serial1.println("Moving forward.");
 }
 
 // Method to move the Zumo backward
 void XBee::moveBackward() {
     Serial.println("Moving backward."); // Replaced std::cout with Serial.println
+    Serial1.println("Moving backward.");
 }
 
 // Method to turn the Zumo left
 void XBee::turnLeft() {
     Serial.println("Turning left."); // Replaced std::cout with Serial.println
+    Serial1.println("Turning left.");
 }
 
 // Method to turn the Zumo right
 void XBee::turnRight() {
     Serial.println("Turning right."); // Replaced std::cout with Serial.println
+    Serial1.println("Turning right.");
 }
 
 // Method to send diagnostic info back to the remote XBee
