@@ -1,31 +1,41 @@
+/**
+ * @file HHS-Zumo.ino
+ * @brief Main Arduino sketch for the Zumo robot, utilizing the XBee class for communication and control.
+ */
+
 #include "XBee.h"
 
-// Global XBee object
+/**
+ * @brief Global XBee object for communication and control.
+ */
 XBee xbee;
 
+/**
+ * @brief Arduino setup function.
+ *
+ * Initializes serial communication for debugging and the XBee module.
+ */
 void setup() {
-  // Initialize Serial for local debugging
-  Serial.begin(9600);
-  while (!Serial); // Wait for Serial to connect
+  Serial.begin(9600); /**< Initialize Serial for local debugging. */
+  while (!Serial); /**< Wait for Serial to connect. */
 
-  // Initialize XBee serial communication
-  xbee.initializeSerial();
+  xbee.initializeSerial(); /**< Initialize XBee serial communication. */
   Serial.println("XBee Serial Initialized.");
 
   Serial.println("Setup complete. Listening for remote commands...");
 }
 
+/**
+ * @brief Arduino loop function.
+ *
+ * Continuously checks for incoming characters from the remote XBee module
+ * and processes them using the XBee library.
+ */
 void loop() {
-  // Check for incoming characters from the remote XBee (Serial1)
-  if (Serial1.available()) {
-    char receivedChar = Serial1.read();
-    Serial.print("Received from remote: "); // Optional: print each char as it arrives
+  if (Serial1.available()) { /**< Check for incoming characters from the remote XBee. */
+    char receivedChar = Serial1.read(); /**< Read the received character. */
+    Serial.print("Received from remote: "); /**< Print each received character for debugging. */
     Serial.println(receivedChar);
-    xbee.receiveCharacter(receivedChar); // Pass character to XBee library
+    xbee.receiveCharacter(receivedChar); /**< Pass character to XBee library for processing. */
   }
-  // No delay needed here as Serial1.available() is non-blocking
-  // and XBee.receiveCharacter() handles command processing on newline.
 }
-
-// Note: This sketch assumes that the XBee.h and XBee.cpp files are
-// accessible in the Arduino IDE's library path or in the same sketch folder.

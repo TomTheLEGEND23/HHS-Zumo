@@ -1,12 +1,12 @@
+/**
+ * @file XBee.h
+ * @brief Header file for the XBee class, which handles communication and control for the Zumo robot using XBee.
+ */
+
 #ifndef XBEE_H
 #define XBEE_H
 
 #include <Arduino.h>
-
-// Forward declarations for Zumo control classes (not present, so commented out)
-// class ZumoMotors;
-// class ZumoBuzzer;
-// class ZumoDisplay;
 
 /**
  * @class XBee

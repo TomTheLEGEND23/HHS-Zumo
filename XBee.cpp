@@ -1,117 +1,146 @@
+/**
+ * @file XBee.cpp
+ * @brief Implementation file for the XBee class, which handles communication and control for the Zumo robot using XBee.
+ */
+
 #include "XBee.h"
 
-// Constructor
+/**
+ * @brief Constructor for the XBee class.
+ *
+ * Initializes the XBee object and sets default states.
+ */
 XBee::XBee() : lineFollowingProgramRunning(false) {
-    // Initialize Zumo control objects here if they were present
-    // motors = new ZumoMotors();
-    // buzzer = new ZumoBuzzer();
-    // display = new ZumoDisplay();
-    // inputString.reserve(32); // Commented out as Arduino String handles memory dynamically
+    // Initialization of Zumo control objects can be added here if needed.
 }
 
-// Initialize serial connection from onboard Xbee module to remote "RC" module for remote control and diagnostic information.
+/**
+ * @brief Initializes the serial connection for the XBee module.
+ *
+ * Sets up the serial communication with the remote XBee module.
+ */
 void XBee::initializeSerial() {
-    Serial1.begin(19200);
+    Serial1.begin(19200); /**< Initialize Serial1 for XBee communication. */
 }
 
-// Method to receive a single character from XBee
+/**
+ * @brief Receives a single character from the XBee module.
+ *
+ * @param c The character received from the XBee module.
+ */
 void XBee::receiveCharacter(char c) {
-    // Process the character immediately as a command
-    inputString = c; // Store the single character as the input string
-    processReceivedData(); // Process the command immediately
+    inputString = c; /**< Store the single character as the input string. */
+    processReceivedData(); /**< Process the command immediately. */
 }
 
-// Method to process the accumulated inputString
+/**
+ * @brief Processes the accumulated input string.
+ *
+ * Interprets the input string as commands and executes the corresponding actions.
+ */
 void XBee::processReceivedData() {
-    if (inputString.length() == 0) { // Changed from inputString.empty()
-        return;
+    if (inputString.length() == 0) {
+        return; /**< Exit if the input string is empty. */
     }
 
-    // For simplicity, we process the first character as a command.
-    // More complex parsing can be implemented if needed (e.g., multi-char commands or commands with arguments).
-    char command = inputString[0];
+    char command = inputString[0]; /**< Extract the first character as the command. */
 
-    if ((command == 'P') || (command == 'p')) { // Start Program
-        startProgram();
-    } else if ((command == 'O' ) || (command == 'o')) { // Stop Program (Using 'O' for Off, as 'S' is for South/Backward and typical for gaming inspired controls)
-        stopProgram();
-    } else if ((command == 'W') || (command == 'w')) { // Move Forward
-        if (!lineFollowingProgramRunning) moveForward();
-    } else if ((command == 'S') || (command == 's')) { // Move Backward
-        if (!lineFollowingProgramRunning) moveBackward();
-    } else if ((command == 'A') || (command == 'a')) { // Turn Left
-        if (!lineFollowingProgramRunning) turnLeft();
-    } else if ((command == 'D') || (command == 'd')) { // Turn Right
-        if (!lineFollowingProgramRunning) turnRight();
-    } else if ((command == 'X') || (command == 'x')) { // Send Diagnostics
-        sendDiagnostics();
+    if ((command == 'P') || (command == 'p')) {
+        startProgram(); /**< Start the Zumo program. */
+    } else if ((command == 'O') || (command == 'o')) {
+        stopProgram(); /**< Stop the Zumo program. */
+    } else if ((command == 'W') || (command == 'w')) {
+        if (!lineFollowingProgramRunning) moveForward(); /**< Move forward if the program is not running. */
+    } else if ((command == 'S') || (command == 's')) {
+        if (!lineFollowingProgramRunning) moveBackward(); /**< Move backward if the program is not running. */
+    } else if ((command == 'A') || (command == 'a')) {
+        if (!lineFollowingProgramRunning) turnLeft(); /**< Turn left if the program is not running. */
+    } else if ((command == 'D') || (command == 'd')) {
+        if (!lineFollowingProgramRunning) turnRight(); /**< Turn right if the program is not running. */
+    } else if ((command == 'X') || (command == 'x')) {
+        sendDiagnostics(); /**< Send diagnostic information. */
     } else {
-        // Unknown command
-        Serial.print("Unknown command: ");
-        Serial.println(command); // Replaced std::cout with Serial.print/Serial.println
+        Serial.print("Unknown command: "); /**< Print unknown command for debugging. */
+        Serial.println(command);
         Serial1.print("Unknown command: ");
-        Serial1.println(command); // Replaced std::cout with Serial.print/Serial.println
+        Serial1.println(command);
     }
 
-    clearInputString(); // Clear buffer after processing
+    clearInputString(); /**< Clear the input string buffer after processing. */
 }
 
-// Method to start the Zumo program
+/**
+ * @brief Starts the Zumo program.
+ *
+ * Activates the line-following program or other functionalities.
+ */
 void XBee::startProgram() {
-    lineFollowingProgramRunning = true;
-    Serial.println("Program started."); // Replaced std::cout with Serial.println
+    lineFollowingProgramRunning = true; /**< Set the program running state to true. */
+    Serial.println("Program started.");
     Serial1.println("Program started.");
 }
 
-// Method to stop the Zumo program
+/**
+ * @brief Stops the Zumo program.
+ *
+ * Deactivates the line-following program or other functionalities.
+ */
 void XBee::stopProgram() {
-    lineFollowingProgramRunning = false;
-    Serial.println("Program stopped."); // Replaced std::cout with Serial.println
+    lineFollowingProgramRunning = false; /**< Set the program running state to false. */
+    Serial.println("Program stopped.");
     Serial1.println("Program stopped.");
 }
 
-// Method to move the Zumo forward
+/**
+ * @brief Moves the Zumo robot forward.
+ */
 void XBee::moveForward() {
-    Serial.println("Moving forward."); // Replaced std::cout with Serial.println
+    Serial.println("Moving forward.");
     Serial1.println("Moving forward.");
 }
 
-// Method to move the Zumo backward
+/**
+ * @brief Moves the Zumo robot backward.
+ */
 void XBee::moveBackward() {
-    Serial.println("Moving backward."); // Replaced std::cout with Serial.println
+    Serial.println("Moving backward.");
     Serial1.println("Moving backward.");
 }
 
-// Method to turn the Zumo left
+/**
+ * @brief Turns the Zumo robot left.
+ */
 void XBee::turnLeft() {
-    Serial.println("Turning left."); // Replaced std::cout with Serial.println
+    Serial.println("Turning left.");
     Serial1.println("Turning left.");
 }
 
-// Method to turn the Zumo right
+/**
+ * @brief Turns the Zumo robot right.
+ */
 void XBee::turnRight() {
-    Serial.println("Turning right."); // Replaced std::cout with Serial.println
+    Serial.println("Turning right.");
     Serial1.println("Turning right.");
 }
 
-// Method to send diagnostic info back to the remote XBee
+/**
+ * @brief Sends diagnostic information to the remote XBee module.
+ *
+ * Provides details about the current state of the Zumo robot.
+ */
 void XBee::sendDiagnostics() {
-    // Ensure Serial1 is initialized in your setup code, e.g., Serial1.begin(9600);
-    
     Serial1.println("--- Zumo Diagnostics ---");
     Serial1.print("Program Running: ");
     Serial1.println(lineFollowingProgramRunning ? "Yes" : "No");
     Serial1.print("Input Buffer: ");
-    Serial1.println(inputString.c_str()); // Send the content of std::string
-    // Add more diagnostic info as needed (battery level (if possible), sensor readings from proximity sensor, line sensor, IMU, etc.)
-    // For example:
-    // Serial1.print("Battery Voltage: ");
-    // Serial1.println(readBatteryMillivolts());
+    Serial1.println(inputString.c_str()); /**< Send the content of the input string. */
     Serial1.println("--- End Diagnostics ---");
 }
 
-// Helper to clear the input string
+/**
+ * @brief Clears the input string buffer.
+ */
 void XBee::clearInputString() {
-    inputString = ""; // Changed from inputString.clear()
+    inputString = ""; /**< Clear the input string. */
 }
 
