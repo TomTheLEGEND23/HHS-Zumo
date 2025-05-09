@@ -1,10 +1,12 @@
 #include "IMU.h"
 
 /**
- * @brief Constructor voor de IMU-klasse.
+ * @brief Constructor voor de IMU klasse.
  * 
- * @param x Kalibratie-offset voor de magnetometer op de X-as.
- * @param y Kalibratie-offset voor de magnetometer op de Y-as.
+ * Initialiseert de IMU met gegeven magnetometer calibratie waarden.
+ * 
+ * @param x Calibratie waarde voor de magnetometer X-as.
+ * @param y Calibratie waarde voor de magnetometer Y-as.
  */
 IMU::IMU(float x, float y)
   : status(false),
@@ -14,9 +16,12 @@ IMU::IMU(float x, float y)
 }
 
 /**
- * @brief Initialiseert de IMU-sensor en berekent bias-waarden.
+ * @brief Initialiseert de IMU sensor.
  * 
- * @return true als initialisatie succesvol was, anders false.
+ * Voert de initialisatie van de IMU uit en berekent de bias van de accelerometer
+ * en gyroscoop door 100 metingen uit te voeren.
+ * 
+ * @return true als de initialisatie succesvol was, anders false.
  */
 bool IMU::init() {
   Wire.begin();
@@ -25,7 +30,6 @@ bool IMU::init() {
     status = true;
   }
 
-  // Voer 100 metingen uit om gemiddelde bias te bepalen
   for (int i = 0; i < 100; i++) {
     imu.read();
     accelBiasX += imu.a.x * 0.061 * 9.80665 / 1000.0;
@@ -37,7 +41,6 @@ bool IMU::init() {
     gyroBiasZ += imu.g.z * 8.75 / 1000.0;
   }
 
-  // Gemiddelde berekenen
   accelBiasX /= 100.0;
   accelBiasY /= 100.0;
   accelBiasZ = accelBiasZ / 100.0 - 9.80665;
@@ -52,7 +55,9 @@ bool IMU::init() {
 /**
  * @brief Geeft de gecorrigeerde versnelling op de X-as.
  * 
- * @return Versnelling in m/s².
+ * Berekent de versnelling op de X-as na correctie voor bias.
+ * 
+ * @return De versnelling in m/s² op de X-as.
  */
 float IMU::accelX() {
   imu.enableDefault();
@@ -64,7 +69,9 @@ float IMU::accelX() {
 /**
  * @brief Geeft de gecorrigeerde versnelling op de Y-as.
  * 
- * @return Versnelling in m/s².
+ * Berekent de versnelling op de Y-as na correctie voor bias.
+ * 
+ * @return De versnelling in m/s² op de Y-as.
  */
 float IMU::accelY() {
   imu.enableDefault();
@@ -76,7 +83,9 @@ float IMU::accelY() {
 /**
  * @brief Geeft de gecorrigeerde versnelling op de Z-as.
  * 
- * @return Versnelling in m/s².
+ * Berekent de versnelling op de Z-as na correctie voor bias.
+ * 
+ * @return De versnelling in m/s² op de Z-as.
  */
 float IMU::accelZ() {
   imu.enableDefault();
@@ -88,7 +97,9 @@ float IMU::accelZ() {
 /**
  * @brief Geeft de gecorrigeerde gyroscoopwaarde op de X-as.
  * 
- * @return Hoeksnelheid in graden per seconde.
+ * Berekent de hoeksnelheid op de X-as na correctie voor bias.
+ * 
+ * @return De hoeksnelheid in graden per seconde op de X-as.
  */
 float IMU::gyroX() {
   imu.read();
@@ -98,7 +109,9 @@ float IMU::gyroX() {
 /**
  * @brief Geeft de gecorrigeerde gyroscoopwaarde op de Y-as.
  * 
- * @return Hoeksnelheid in graden per seconde.
+ * Berekent de hoeksnelheid op de Y-as na correctie voor bias.
+ * 
+ * @return De hoeksnelheid in graden per seconde op de Y-as.
  */
 float IMU::gyroY() {
   imu.read();
@@ -108,7 +121,9 @@ float IMU::gyroY() {
 /**
  * @brief Geeft de gecorrigeerde gyroscoopwaarde op de Z-as.
  * 
- * @return Hoeksnelheid in graden per seconde.
+ * Berekent de hoeksnelheid op de Z-as na correctie voor bias.
+ * 
+ * @return De hoeksnelheid in graden per seconde op de Z-as.
  */
 float IMU::gyroZ() {
   imu.read();
@@ -117,6 +132,9 @@ float IMU::gyroZ() {
 
 /**
  * @brief Berekent de kompasrichting met tiltcompensatie.
+ * 
+ * Berekent de richting ten opzichte van het magnetisch noorden door gebruik
+ * te maken van accelerometer- en magnetometerdata.
  * 
  * @return Richting in graden t.o.v. magnetisch noorden.
  */
@@ -150,7 +168,10 @@ float IMU::compassHeading() {
 /**
  * @brief Berekent de pitchhoek op basis van versnellingsdata.
  * 
- * @return Pitch in radialen.
+ * Berekent de pitchhoek (hoek van de accelerometer ten opzichte van de verticale)
+ * uit de accelerometerdata.
+ * 
+ * @return Pitchhoek in radialen.
  */
 float IMU::pitch() {
   imu.read();
@@ -168,7 +189,10 @@ float IMU::pitch() {
 /**
  * @brief Berekent de rollhoek op basis van versnellingsdata.
  * 
- * @return Roll in radialen.
+ * Berekent de rollhoek (hoek van de accelerometer ten opzichte van de horizontale)
+ * uit de accelerometerdata.
+ * 
+ * @return Rollhoek in radialen.
  */
 float IMU::roll() {
   imu.read();
@@ -186,6 +210,8 @@ float IMU::roll() {
 
 /**
  * @brief Geeft de status van de initialisatie van de IMU terug.
+ * 
+ * Geeft terug of de IMU correct geïnitialiseerd is.
  * 
  * @return true als succesvol geïnitialiseerd, anders false.
  */
