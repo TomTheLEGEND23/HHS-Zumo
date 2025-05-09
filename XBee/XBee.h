@@ -8,29 +8,99 @@
 // class ZumoBuzzer;
 // class ZumoDisplay;
 
+/**
+ * @class XBee
+ * @brief A class to handle communication and control for the Zumo robot using XBee.
+ *
+ * The XBee class provides methods to initialize serial communication, process commands,
+ * and control the Zumo robot's movements and diagnostics.
+ */
 class XBee {
 public:
-    XBee(); // Constructor
+    /**
+     * @brief Constructor for the XBee class.
+     *
+     * Initializes the XBee object and sets default states.
+     */
+    XBee();
 
-    void initializeSerial(); // Initialize serial connection
+    /**
+     * @brief Initializes the serial connection for the XBee module.
+     *
+     * Sets up the serial communication with the remote XBee module.
+     */
+    void initializeSerial();
 
-    void receiveCharacter(char c); // Method to receive a single character from XBee
-    void processReceivedData(); // Method to process the accumulated inputString
+    /**
+     * @brief Receives a single character from the XBee module.
+     *
+     * @param c The character received from the XBee module.
+     */
+    void receiveCharacter(char c);
 
-    // Methods for remote control commands
+    /**
+     * @brief Processes the accumulated input string.
+     *
+     * Interprets the input string as commands and executes the corresponding actions.
+     */
+    void processReceivedData();
+
+    /**
+     * @brief Starts the Zumo program.
+     *
+     * Activates the line-following program or other functionalities.
+     */
     void startProgram();
-    void stopProgram();
-    void moveForward();
-    void moveBackward();
-    void turnLeft();
-    void turnRight();
-    void sendDiagnostics(); // Method to send diagnostic info back
 
-    void clearInputString(); // Helper to clear the input string/character
+    /**
+     * @brief Stops the Zumo program.
+     *
+     * Deactivates the line-following program or other functionalities.
+     */
+    void stopProgram();
+
+    /**
+     * @brief Moves the Zumo robot forward.
+     */
+    void moveForward();
+
+    /**
+     * @brief Moves the Zumo robot backward.
+     */
+    void moveBackward();
+
+    /**
+     * @brief Turns the Zumo robot left.
+     */
+    void turnLeft();
+
+    /**
+     * @brief Turns the Zumo robot right.
+     */
+    void turnRight();
+
+    /**
+     * @brief Sends diagnostic information to the remote XBee module.
+     *
+     * Provides details about the current state of the Zumo robot.
+     */
+    void sendDiagnostics();
+
+    /**
+     * @brief Clears the input string buffer.
+     */
+    void clearInputString();
 
 private:
-    String inputString; // Stores incoming characters
-    bool lineFollowingProgramRunning;     // Tracks if line following program is active
+    /**
+     * @brief Stores incoming characters from the XBee module.
+     */
+    String inputString;
+
+    /**
+     * @brief Tracks whether the line-following program is active.
+     */
+    bool lineFollowingProgramRunning;
 };
 
 #endif // XBEE_H
