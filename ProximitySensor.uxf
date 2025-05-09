@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>14</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>98</x><y>182</y><w>294</w><h>266</h></coordinates><panel_attributes>Proximity Sensor
+<diagram program="umletino" version="15.1"><zoom_level>14</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>98</x><y>182</y><w>406</w><h>266</h></coordinates><panel_attributes>Proximity Sensor
 --
 - int detectionThreshold
 --
