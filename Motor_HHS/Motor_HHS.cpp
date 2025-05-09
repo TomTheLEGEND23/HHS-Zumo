@@ -3,8 +3,6 @@
 #include <avr/io.h>
 
 Motor_HHS::Motor_HHS(String M, int pPWM, int pDIR) : motorkant(M), pinPWM(pPWM), pinDIR(pDIR), huidigesnelheid(0) {}
-
-//Wanneer er variablen werden gebruikt voor de pin nummers werkt de FastGPIO niet. Als dit er nog staat dan is daar geen oplossing voor gevonden.
 #define PWM_L 10
 #define PWM_R 9
 #define DIR_L 16
@@ -26,23 +24,20 @@ void Motor_HHS::init() {
     OCR1B = 0;
 }
 
-//Met deze functie worden de motoren aangezet.
 void Motor_HHS::setSnelheid(int snelheid) {
     bool achteruit = false;
 
-    //Hier wordt de snelheid omgezet in een positieve waarde en een achteruit of vooruit waarde.
+    //minimum snelheid is 125
     if (snelheid < 0) {
         snelheid = -snelheid;
         achteruit = true;
     }
-    //Hier wordt de snelheid gelimit op 400 wat dit is de max PWM dat is ingesteld bij de PWM setup.
     if (snelheid > 400) {
         snelheid = 400;
     }
 
     huidigesnelheid = snelheid;
-    // Hier worden de motoren aangestuurd
-    //Wanneer er variablen werden gebruikt voor de pin nummers werkt de FastGPIO niet. Als dit er nog staat dan is daar geen oplossing voor gevonden
+
     if (motorkant == "rechts") {
         OCR1A = snelheid;
         FastGPIO::Pin<DIR_R>::setOutput(achteruit);
@@ -52,7 +47,7 @@ void Motor_HHS::setSnelheid(int snelheid) {
     }
     
 }
-// Deze functie geeft de huidige snelheid van de gespecificeerde motor weer
+
 int Motor_HHS::getSnelheid() const {
     return huidigesnelheid;
 }

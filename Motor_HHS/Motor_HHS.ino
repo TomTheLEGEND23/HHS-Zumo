@@ -12,8 +12,17 @@ void setup() {
   motorRechts.init();
   motorLinks.setSnelheid(0);
   motorRechts.setSnelheid(0);
+// hieronder staat een voorbeeld om de robot een stukje te laten rijden
+delay(2000);
+
+delay(2000);
+motorLinks.setSnelheid(-125);
+motorRechts.setSnelheid(-125);
+delay(20000);
+motorLinks.setSnelheid(0);
+motorRechts.setSnelheid(0);
 }
 
 void loop() {
-  motorLinks.setSnelheid(200);
+
 }
