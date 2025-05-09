@@ -1,15 +1,14 @@
 #include "IMU.h"
 
-IMU::IMU(float x, float y)
-  : status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0), magCalX(x), magCalY(y) {
-  Zumo32U4IMU imu;
+IMU::IMU(float x, float y):status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0), magCalX(x), magCalY(y) {
+}
 
+bool IMU::init() {
   Wire.begin();
+  imu.enableDefault();
   if (imu.init()) {
     status = true;
   }
-
-  imu.enableDefault();
 
   //Doe 100 tet om gemiddelde afwijking te krijgen van sensor bias
   for (int i = 0; i < 100; i++) {
@@ -33,7 +32,8 @@ IMU::IMU(float x, float y)
 }
 
 float IMU::accelX() {
-  Zumo32U4IMU imu;
+  imu.enableDefault();
+  Wire.begin();
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -43,7 +43,8 @@ float IMU::accelX() {
 }
 
 float IMU::accelY() {
-  Zumo32U4IMU imu;
+  imu.enableDefault();
+  Wire.begin();
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -53,17 +54,16 @@ float IMU::accelY() {
 }
 
 float IMU::accelZ() {
-  Zumo32U4IMU imu;
+  imu.enableDefault();
+  Wire.begin();
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
   float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;  //Accelerometer data x-axis
-
   return az;
 }
 
 float IMU::gyroX() {
-  Zumo32U4IMU imu;
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -73,7 +73,6 @@ float IMU::gyroX() {
 }
 
 float IMU::gyroY() {
-  Zumo32U4IMU imu;
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -83,7 +82,6 @@ float IMU::gyroY() {
 }
 
 float IMU::gyroZ() {
-  Zumo32U4IMU imu;
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -93,7 +91,6 @@ float IMU::gyroZ() {
 }
 
 float IMU::compassHeading() {
-  Zumo32U4IMU imu;
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -127,7 +124,6 @@ float IMU::compassHeading() {
 }
 
 float IMU::pitch() {
-  Zumo32U4IMU imu;
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
@@ -145,7 +141,6 @@ float IMU::pitch() {
 }
 
 float IMU::roll() {
-  Zumo32U4IMU imu;
   imu.read();  // Lees nieuwste data van de IMU
 
   // Converteer analoge waardes volgens datseheet LSM303D naar m/s2

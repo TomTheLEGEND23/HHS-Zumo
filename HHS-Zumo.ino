@@ -1,11 +1,14 @@
 #include "IMU.h"
+IMU imu(-2538, -2939.0);
 
 void setup() {
-  IMU imu(-2583.0, -2939.0);
-  Serial.println(imu.compassHeading());
+  Serial.begin(9600);
+  imu.init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  //Serial.println(imu.accelZ());
+  Serial.println(imu.compassHeading());
+  delay(500);
 
 }
