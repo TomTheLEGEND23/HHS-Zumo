@@ -1,8 +1,23 @@
 #include "IMU.h"
 
-IMU::IMU(float x, float y):status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0), magCalX(x), magCalY(y) {
+/**
+ * @brief Constructor voor de IMU-klasse.
+ * 
+ * @param x Kalibratie-offset voor de magnetometer op de X-as.
+ * @param y Kalibratie-offset voor de magnetometer op de Y-as.
+ */
+IMU::IMU(float x, float y)
+  : status(false),
+    accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0),
+    gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0),
+    magCalX(x), magCalY(y) {
 }
 
+/**
+ * @brief Initialiseert de IMU-sensor en berekent bias-waarden.
+ * 
+ * @return true als initialisatie succesvol was, anders false.
+ */
 bool IMU::init() {
   Wire.begin();
   imu.enableDefault();
@@ -10,18 +25,19 @@ bool IMU::init() {
     status = true;
   }
 
-  //Doe 100 tet om gemiddelde afwijking te krijgen van sensor bias
+  // Voer 100 metingen uit om gemiddelde bias te bepalen
   for (int i = 0; i < 100; i++) {
-    imu.read();  // Lees nieuwste data van de IMU
+    imu.read();
     accelBiasX += imu.a.x * 0.061 * 9.80665 / 1000.0;
     accelBiasY += imu.a.y * 0.061 * 9.80665 / 1000.0;
     accelBiasZ += imu.a.z * 0.061 * 9.80665 / 1000.0;
 
-    gyroBiasX += (imu.g.x * 8.75 / 1000.0);
-    gyroBiasY += (imu.g.y * 8.75 / 1000.0);
-    gyroBiasZ += (imu.g.z * 8.75 / 1000.0);
+    gyroBiasX += imu.g.x * 8.75 / 1000.0;
+    gyroBiasY += imu.g.y * 8.75 / 1000.0;
+    gyroBiasZ += imu.g.z * 8.75 / 1000.0;
   }
-  // Deel door 100 voor gemiddelde
+
+  // Gemiddelde berekenen
   accelBiasX /= 100.0;
   accelBiasY /= 100.0;
   accelBiasZ = accelBiasZ / 100.0 - 9.80665;
@@ -29,135 +45,150 @@ bool IMU::init() {
   gyroBiasX /= 100;
   gyroBiasY /= 100;
   gyroBiasZ /= 100;
+
+  return status;
 }
 
+/**
+ * @brief Geeft de gecorrigeerde versnelling op de X-as.
+ * 
+ * @return Versnelling in m/s².
+ */
 float IMU::accelX() {
   imu.enableDefault();
   Wire.begin();
-  imu.read();  // Lees nieuwste data van de IMU
-
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;  //Accelerometer data x-axis
-
-  return ax;
+  imu.read();
+  return imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;
 }
 
+/**
+ * @brief Geeft de gecorrigeerde versnelling op de Y-as.
+ * 
+ * @return Versnelling in m/s².
+ */
 float IMU::accelY() {
   imu.enableDefault();
   Wire.begin();
-  imu.read();  // Lees nieuwste data van de IMU
-
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;  //Accelerometer data x-axis
-
-  return ay;
+  imu.read();
+  return imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;
 }
 
+/**
+ * @brief Geeft de gecorrigeerde versnelling op de Z-as.
+ * 
+ * @return Versnelling in m/s².
+ */
 float IMU::accelZ() {
   imu.enableDefault();
   Wire.begin();
-  imu.read();  // Lees nieuwste data van de IMU
-
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;  //Accelerometer data x-axis
-  return az;
+  imu.read();
+  return imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;
 }
 
+/**
+ * @brief Geeft de gecorrigeerde gyroscoopwaarde op de X-as.
+ * 
+ * @return Hoeksnelheid in graden per seconde.
+ */
 float IMU::gyroX() {
-  imu.read();  // Lees nieuwste data van de IMU
-
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float gx = imu.g.x * 8.75 / 1000.0 - gyroBiasX;
-
-  return gx;
+  imu.read();
+  return imu.g.x * 8.75 / 1000.0 - gyroBiasX;
 }
 
+/**
+ * @brief Geeft de gecorrigeerde gyroscoopwaarde op de Y-as.
+ * 
+ * @return Hoeksnelheid in graden per seconde.
+ */
 float IMU::gyroY() {
-  imu.read();  // Lees nieuwste data van de IMU
-
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float gy = imu.g.y * 8.75 / 1000.0 - gyroBiasY;
-
-  return gy;
+  imu.read();
+  return imu.g.y * 8.75 / 1000.0 - gyroBiasY;
 }
 
+/**
+ * @brief Geeft de gecorrigeerde gyroscoopwaarde op de Z-as.
+ * 
+ * @return Hoeksnelheid in graden per seconde.
+ */
 float IMU::gyroZ() {
-  imu.read();  // Lees nieuwste data van de IMU
-
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float gz = imu.g.z * 8.75 / 1000.0 - gyroBiasZ;
-
-  return gz;
+  imu.read();
+  return imu.g.z * 8.75 / 1000.0 - gyroBiasZ;
 }
 
+/**
+ * @brief Berekent de kompasrichting met tiltcompensatie.
+ * 
+ * @return Richting in graden t.o.v. magnetisch noorden.
+ */
 float IMU::compassHeading() {
-  imu.read();  // Lees nieuwste data van de IMU
+  imu.read();
 
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;  //Accelerometer data x-axis
-  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;  //Accelerometer data y-axis
-  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;  //Accelerometer data z-axis
+  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;
+  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;
+  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;
 
-  // Magnetometer data (in Gauss)
-  float mx = imu.m.x - magCalX;  // Magnetometer X-axis with calibration
-  float my = imu.m.y - magCalY;  // Magnetometer Y-axis with calibration
+  float mx = imu.m.x - magCalX;
+  float my = imu.m.y - magCalY;
 
-  // Normaliseer accelerometer data
   float accNorm = sqrt(ax * ax + ay * ay + az * az);
   float ax_n = ax / accNorm;
   float ay_n = ay / accNorm;
   float az_n = az / accNorm;
 
-  // Bereken pitch and roll from accelerometer data
-  float pitch = asin(-ax_n);       // Forward/Backward tilt
-  float roll = atan2(ay_n, az_n);  // Sideways tilt
+  float pitch = asin(-ax_n);
+  float roll = atan2(ay_n, az_n);
 
-  // Tilt compensatie for magnetometer data (gebruikt alleen x en y waardes)
-  float mx_comp = mx * cos(pitch);                               // gebruik alleen mx for tilt compensatie
-  float my_comp = mx * sin(roll) * sin(pitch) + my * cos(roll);  // gebruik alleen my for tilt compensatie
+  float mx_comp = mx * cos(pitch);
+  float my_comp = mx * sin(roll) * sin(pitch) + my * cos(roll);
 
-  // Bereken de richting (heading) in graden ten opzichte van magnetisch noorden
   float heading = atan2(-my_comp, mx_comp) * (180.0 / PI);
   if (heading < 0) heading += 360.0;
 
   return heading;
 }
 
+/**
+ * @brief Berekent de pitchhoek op basis van versnellingsdata.
+ * 
+ * @return Pitch in radialen.
+ */
 float IMU::pitch() {
-  imu.read();  // Lees nieuwste data van de IMU
+  imu.read();
 
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;  //Accelerometer data x-axis
-  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;  //Accelerometer data y-axis
-  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;  //Accelerometer data z-axis
+  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;
+  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;
+  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;
 
-  // Normaliseer accelerometer data
   float accNorm = sqrt(ax * ax + ay * ay + az * az);
   float ax_n = ax / accNorm;
 
-  // Bereken pitch and roll from accelerometer data
-  float pitch = asin(-ax_n);  // Forward/Backward tilt
-  return pitch;
+  return asin(-ax_n);
 }
 
+/**
+ * @brief Berekent de rollhoek op basis van versnellingsdata.
+ * 
+ * @return Roll in radialen.
+ */
 float IMU::roll() {
-  imu.read();  // Lees nieuwste data van de IMU
+  imu.read();
 
-  // Converteer analoge waardes volgens datseheet LSM303D naar m/s2
-  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;  //Accelerometer data x-axis
-  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;  //Accelerometer data y-axis
-  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;  //Accelerometer data z-axis
+  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;
+  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;
+  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;
 
-  // Normaliseer accelerometer data
   float accNorm = sqrt(ax * ax + ay * ay + az * az);
   float ay_n = ay / accNorm;
   float az_n = az / accNorm;
 
-  // Bereken pitch and roll from accelerometer data
-  float roll = atan2(ay_n, az_n);  // Sideways tilt
-  return roll;
+  return atan2(ay_n, az_n);
 }
 
+/**
+ * @brief Geeft de status van de initialisatie van de IMU terug.
+ * 
+ * @return true als succesvol geïnitialiseerd, anders false.
+ */
 bool IMU::fetchStatus() {
   return status;
 }
