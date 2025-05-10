@@ -1,0 +1,29 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Buzzer
+--
+  -buzzer: Zumo32U4Buzzer
+--
++ Buzzer()
++ ~Buzzer()
++ beep(frequency: int, duration: int): void
++ playMarioTheme(): void
++ playStartup(): void 
++ playVictory(): void
++ playError(): void
+- playNote(frequency: int, duration: int, pause: int): void
+</help_text><element><id>UMLClass</id><coordinates><x>10</x><y>50</y><w>330</w><h>250</h></coordinates><panel_attributes>Buzzer
+--
+-buzzer: Zumo32U4Buzzer
+--
++ Buzzer()
++ ~Buzzer()
++ beep(frequency: int, duration: int): void
++ playMarioTheme(): void
++ playStartup(): void 
++ playVictory(): void
++ playError(): void
++ playImperialMarch(): void
++ playSiren(): void
++ playR2D2(): void
++ playR2D2Scream(): void
++ playTetris(): void
+- playNote(frequency: int, duration: int, pause: int): void</panel_attributes><additional_attributes></additional_attributes></element></diagram>
