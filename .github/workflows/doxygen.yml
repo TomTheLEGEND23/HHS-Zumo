@@ -7,6 +7,10 @@ on:
     branches:
       - main      # Run when code is pushed to main branch
       - test      # Run when code is pushed to test branch
+  pull_request:
+    branches:
+      - main      # Run when a PR targeting main is created/updated
+      - test      # Run when a PR targeting test is created/updated
 
 # Set permissions for the GitHub token used by the workflow
 # This is crucial for allowing commits back to the repository
