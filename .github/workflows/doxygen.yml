@@ -8,9 +8,11 @@ on:
       - main      # Run when code is pushed to main branch
       - test      # Run when code is pushed to test branch
   pull_request:
+    types:
+      - closed    # This will trigger when a PR is closed
     branches:
-      - main      # Run when a PR targeting main is created/updated
-      - test      # Run when a PR targeting test is created/updated
+      - main      # Only for PRs targeting main branch
+      - test      # Only for PRs targeting test branch
 
 # Set permissions for the GitHub token used by the workflow
 # This is crucial for allowing commits back to the repository
@@ -19,6 +21,8 @@ permissions:
 
 jobs:
   build:
+    # Only run this job when a PR is merged (not just closed) or on direct pushes
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     # Specify the environment to run on
     runs-on: ubuntu-latest
 
