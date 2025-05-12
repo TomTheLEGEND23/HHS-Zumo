@@ -22,10 +22,10 @@ void setup() {
   motorRechts.setSnelheid(0); ///< Stel de snelheid van de rechter motor in op 0.
 
   // Voorbeeld om de robot een stukje te laten rijden
-  delay(2000); ///< Wacht 20 seconden.
+  delay(2000); ///< Wacht 2 seconden.
   motorLinks.setSnelheid(-225); ///< Stel de snelheid van de linker motor in op -225.
   motorRechts.setSnelheid(-225); ///< Stel de snelheid van de rechter motor in op -225.
-  delay(2000); ///< Wacht 20 seconden.
+  delay(2000); ///< Wacht 2 seconden.
   motorLinks.setSnelheid(0); ///< Stop de linker motor.
   motorRechts.setSnelheid(0); ///< Stop de rechter motor.
 }
