@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xbee_0',['XBee',['../classXBee.html',1,'']]]
+  ['proximitysensors_0',['ProximitySensors',['../classProximitySensors.html',1,'']]]
 ];

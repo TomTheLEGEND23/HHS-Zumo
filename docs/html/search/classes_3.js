@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['proximitysensors_0',['ProximitySensors',['../classProximitySensors.html',1,'']]]
+  ['motor_5fhhs_0',['Motor_HHS',['../classMotor__HHS.html',1,'']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['imu_0',['imu',['../classIMU.html#ac87b3c69d51f1f653e9d4ac1cfce28f1',1,'IMU']]],
-  ['inputstring_1',['inputstring',['../classXBee.html#a3a7e6e22446a656204a06a78d7fd8f28',1,'XBee::inputString'],['../xbee-buzzer-demo_8cpp.html#abfa7bc4032f1ef9070aa48a183f30d4a',1,'inputString:&#160;xbee-buzzer-demo.cpp'],['../xbee-led-demo_8cpp.html#abfa7bc4032f1ef9070aa48a183f30d4a',1,'inputString:&#160;xbee-led-demo.cpp']]]
+  ['huidigesnelheid_0',['huidigesnelheid',['../classMotor__HHS.html#a5d3711b137d515ab7a8fd35265d10973',1,'Motor_HHS']]]
 ];
