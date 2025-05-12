@@ -12,6 +12,10 @@ on:
       - test
       - doxygen
 
+# Add permissions section to give write access      
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,6 +23,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Doxygen
         run: sudo apt-get install doxygen
@@ -28,10 +34,10 @@ jobs:
 
       - name: Commit and push documentation
         run: |
-          git config --global user.name 'GitHub Action'
-          git config --global user.email 'action@github.com'
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
           git add ./docs/  # Change this path to match your Doxygen output directory
           git commit -m "Update Doxygen documentation" || echo "No changes to commit"
-          git push
+          git push origin HEAD:${GITHUB_REF_NAME}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
