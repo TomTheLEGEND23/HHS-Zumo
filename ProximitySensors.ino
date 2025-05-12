@@ -26,7 +26,7 @@ void setup()
   // Initialize and configure the proximity sensors
   proxSensors.initSensors();  // Initialize the 3 sensors (left, front, right)
   
-  // Optional: Set custom detection threshold (default is 5)
+  // Optional: Set custom detection threshold (default is 4)
   // proxSensors.setDetectionThreshold(6);
   
   Serial.println("Proximity Sensors Test");
