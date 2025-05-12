@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+      - test
+      - doxygen
   pull_request:
     branches:
       - main
+      - test
+      - doxygen
 
 jobs:
   build:
