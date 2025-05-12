@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>460</y>
+      <w>390</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>LineSensor
+--
+- static const uint8_t NUM_SENSORS = 5
+- static const uint16_t BLACK_LINE_THRESHOLD = 800;
+--
++ void 	init ()
++ bool 	isBlackLineDetected ()
++ void 	readSensorValues (uint16_t *sensorValues)
++ void 	printSensorValues ()
+LineSensor()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>290</y>
+      <w>370</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>_Class_Zumo32U4LineSensors:lineSensors_
+--
+
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>350</y>
+      <w>30</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+</diagram>
