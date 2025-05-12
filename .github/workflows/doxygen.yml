@@ -6,13 +6,13 @@ on:
   push:
     branches:
       - main      # Run when code is pushed to main branch
-      - test      # Run when code is pushed to test branch
+      - Test      # Run when code is pushed to Test branch
   pull_request:
     types:
       - closed    # This will trigger when a PR is closed
     branches:
       - main      # Only for PRs targeting main branch
-      - test      # Only for PRs targeting test branch
+      - Test      # Only for PRs targeting Test branch
 
 # Set permissions for the GitHub token used by the workflow
 # This is crucial for allowing commits back to the repository
