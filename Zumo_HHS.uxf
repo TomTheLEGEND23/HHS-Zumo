@@ -1,0 +1,94 @@
+<diagram program="umletino" version="15.1"><zoom_level>9</zoom_level><element><id>UMLClass</id><coordinates><x>369</x><y>729</y><w>351</w><h>153</h></coordinates><panel_attributes>LineSensor
+--
+- static const uint8_t NUM_SENSORS = 5
+- static const uint16_t BLACK_LINE_THRESHOLD = 800;
+--
++ void 	init ()
++ bool 	isBlackLineDetected ()
++ void 	readSensorValues (uint16_t *sensorValues)
++ void 	printSensorValues ()
+LineSensor()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>369</x><y>900</y><w>351</w><h>54</h></coordinates><panel_attributes>_Class_Zumo32U4LineSensors:lineSensors_
+--
+
+--</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>891</x><y>720</y><w>315</w><h>324</h></coordinates><panel_attributes>IMU
+--
+-status : bool
+-AccelBiasX : float
+-AccelBiasY : float
+-AccelBiasZ : float
+-gyroBiasX : float
+-gyroBiasY : float
+-gyroBiasZ : float
+-magCalX : float
+-magCalY : float
+--
++IMU(MagnetometerXOffset, MagnetometerYOffset)
++AccelX() float
++AccelY() float
++AccelZ() float
++GyroX() float
++GyroY() float
++GyroZ() float
++CompassHeading() float
++fetchStatus() bool
++pitch() float
++roll() float</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>270</x><y>207</y><w>162</w><h>135</h></coordinates><panel_attributes>_motorRechts: Motor_HHS_
+--
+pinPWM = 9                   
+pinDIR = 15                   
+huidigesnelheid = 0  </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>315</x><y>423</y><w>288</w><h>153</h></coordinates><panel_attributes>Motor_HHS
+--
+- pinPWM: int                
+- pinDIR: int               
+- huidigesnelheid: int      
+--
++ Motor_HHS(int, int)
++ init(): void               
++ setSnelheid(int): void    
++ getSnelheid(): int </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>513</x><y>207</y><w>162</w><h>135</h></coordinates><panel_attributes>_motorLinks: Motor_HHS_
+--
+pinPWM = 10                  
+pinDIR = 16                  
+huidigesnelheid = 0  </panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>792</x><y>162</y><w>261</w><h>171</h></coordinates><panel_attributes>Proximity Sensor
+--
+- int detectionThreshold
+--
++ ProximitySensors()
++ void initSensors();
++ void read(); 
++ bool objectDetectedLeft();
++ bool objectDetectedRight();
++ bool objectDetectedFront();
++ void setDetectionThreshold(int threshold);
++ int getDetectionThreshold();
++ void printReadings();
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1116</x><y>387</y><w>243</w><h>207</h></coordinates><panel_attributes>_Xbee_
+--
+- lineFollowingProgramRunning: bool
+- inputString: string
+--
++ initializeSerial(); void
++ receiveCharacter(char); void
++ processReceivedData(); void
++ startProgram(); void
++ stopProgram(); void
++ moveForward(); void
++ moveBackward(); void
++ turnLeft(); void
++ turnRight(); void
++ sendDiagnostic(); void
++ clearInputString(); void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>720</x><y>459</y><w>243</w><h>117</h></coordinates><panel_attributes>ZumoRobot
+--
+
+--
++ init(): void
++ start(): void
++ stop(): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>450</y><w>135</w><h>135</h></coordinates><panel_attributes>Zumo32U4
+--
+
+--
+FastGPIO(int, bool)
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>918</x><y>324</y><w>27</w><h>153</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;10;10;150</additional_attributes></element><element><id>Relation</id><coordinates><x>954</x><y>513</y><w>180</w><h>27</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>180;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>954</x><y>567</y><w>117</w><h>171</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>110;170;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>576</x><y>567</y><w>216</w><h>180</h></coordinates><panel_attributes>lt=&lt;..</panel_attributes><additional_attributes>10;180;220;10</additional_attributes></element><element><id>Relation</id><coordinates><x>594</x><y>495</y><w>144</w><h>36</h></coordinates><panel_attributes>lt=&lt;..
+Stuurt opdrachten &lt;-</panel_attributes><additional_attributes>10;20;140;20</additional_attributes></element><element><id>Relation</id><coordinates><x>126</x><y>486</y><w>207</w><h>36</h></coordinates><panel_attributes>lt=&lt;.
+Geeft hardware eisen door &lt;-</panel_attributes><additional_attributes>10;20;210;20</additional_attributes></element></diagram>
