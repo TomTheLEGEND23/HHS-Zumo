@@ -16,10 +16,9 @@ var searchData=
   ['printreadings_13',['printReadings',['../classProximitySensors.html#a8e4319eb0a49290a021d6051197fb6f2',1,'ProximitySensors']]],
   ['printsensorvalues_14',['printSensorValues',['../classLineSensor.html#a9cecc49993f15f4507baa1805448e606',1,'LineSensor']]],
   ['processreceiveddata_15',['processReceivedData',['../classXBee.html#ac87cb04e353ff25af4f448f5445d0401',1,'XBee']]],
-  ['progmem_16',['progmem',['../xbee-buzzer-demo_8cpp.html#afc5bcf168973bc7a6bd01a45cfa25500',1,'PROGMEM:&#160;xbee-buzzer-demo.cpp'],['../xbee-led-demo_8cpp.html#afc5bcf168973bc7a6bd01a45cfa25500',1,'PROGMEM:&#160;xbee-led-demo.cpp']]],
-  ['proximitysensors_17',['proximitysensors',['../classProximitySensors.html',1,'ProximitySensors'],['../classProximitySensors.html#a4e46854036bd9a06220f4613c23987e3',1,'ProximitySensors::ProximitySensors()']]],
-  ['proximitysensors_2ecpp_18',['ProximitySensors.cpp',['../ProximitySensors_8cpp.html',1,'']]],
-  ['proximitysensors_2eh_19',['ProximitySensors.h',['../ProximitySensors_8h.html',1,'']]],
-  ['pwm_5fl_20',['PWM_L',['../Motor__HHS_8cpp.html#a522f80b91bede3a41970a0c8bc2af286',1,'Motor_HHS.cpp']]],
-  ['pwm_5fr_21',['PWM_R',['../Motor__HHS_8cpp.html#a3fca9ad5cde3e6b6b50ad428aa007b2a',1,'Motor_HHS.cpp']]]
+  ['proximitysensors_16',['proximitysensors',['../classProximitySensors.html#a4e46854036bd9a06220f4613c23987e3',1,'ProximitySensors::ProximitySensors()'],['../classProximitySensors.html',1,'ProximitySensors']]],
+  ['proximitysensors_2ecpp_17',['ProximitySensors.cpp',['../ProximitySensors_8cpp.html',1,'']]],
+  ['proximitysensors_2eh_18',['ProximitySensors.h',['../ProximitySensors_8h.html',1,'']]],
+  ['pwm_5fl_19',['PWM_L',['../Motor__HHS_8cpp.html#a522f80b91bede3a41970a0c8bc2af286',1,'Motor_HHS.cpp']]],
+  ['pwm_5fr_20',['PWM_R',['../Motor__HHS_8cpp.html#a3fca9ad5cde3e6b6b50ad428aa007b2a',1,'Motor_HHS.cpp']]]
 ];
