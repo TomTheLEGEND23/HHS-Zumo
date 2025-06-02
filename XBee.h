@@ -7,6 +7,7 @@
 #define XBEE_H
 
 #include <Arduino.h>
+#include <Zumo32U4.h>
 
 /**
  * @class XBee
@@ -90,6 +91,13 @@ public:
      * @brief Clears the input string buffer.
      */
     void clearInputString();
+
+    /**
+     * @brief Gets the current state of the line following program.
+     *
+     * @return true if the line following program is running, false otherwise.
+     */
+    bool isLineFollowingProgramRunning() const;
 
 private:
     /**

@@ -97,6 +97,8 @@ void XBee::stopProgram() {
 void XBee::moveForward() {
     Serial.println("Moving forward.");
     Serial1.println("Moving forward.");
+    // Add actual motor control here if needed
+    // motors.setSpeeds(150, 150);
 }
 
 /**
@@ -105,6 +107,8 @@ void XBee::moveForward() {
 void XBee::moveBackward() {
     Serial.println("Moving backward.");
     Serial1.println("Moving backward.");
+    // Add actual motor control here if needed
+    // motors.setSpeeds(-150, -150);
 }
 
 /**
@@ -113,6 +117,8 @@ void XBee::moveBackward() {
 void XBee::turnLeft() {
     Serial.println("Turning left.");
     Serial1.println("Turning left.");
+    // Add actual motor control here if needed
+    // motors.setSpeeds(-100, 100);
 }
 
 /**
@@ -121,6 +127,8 @@ void XBee::turnLeft() {
 void XBee::turnRight() {
     Serial.println("Turning right.");
     Serial1.println("Turning right.");
+    // Add actual motor control here if needed
+    // motors.setSpeeds(100, -100);
 }
 
 /**
@@ -142,5 +150,14 @@ void XBee::sendDiagnostics() {
  */
 void XBee::clearInputString() {
     inputString = ""; /**< Clear the input string. */
+}
+
+/**
+ * @brief Gets the current state of the line following program.
+ *
+ * @return true if the line following program is running, false otherwise.
+ */
+bool XBee::isLineFollowingProgramRunning() const {
+    return lineFollowingProgramRunning;
 }
 
