@@ -12,6 +12,12 @@ public:
   void GaAchteruit(int);
   void Stop();
   void SetStaticSpeed(int);
+  
+  // New methods for encoder functionality
+  void resetEncoders();
+  float getDistanceTraveled();
+  long getLeftEncoderCount();
+  long getRightEncoderCount();
 
 private:
   Zumo32U4Motors Motor;

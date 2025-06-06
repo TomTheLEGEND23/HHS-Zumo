@@ -9,5 +9,7 @@ private:
 public:
     ProximitySensors();
     bool objectDetectedFront();
+    bool strongObjectDetectedFront();
+    int scanForObject();
     void printReadings();
 };

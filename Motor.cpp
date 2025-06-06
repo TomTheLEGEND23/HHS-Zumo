@@ -1,5 +1,7 @@
 #include "Motor.h"
 
+Zumo32U4Encoders encoders;
+
 Motoren::Motoren():status(true), staticSpeed(0) {
 }
 
@@ -57,4 +59,27 @@ void Motoren::GaRechts(int speed) {
   }
 
   Motor.setSpeeds(SpeedL, SpeedR);
+}
+
+// Encoder methods implementation
+void Motoren::resetEncoders() {
+  encoders.getCountsAndResetLeft();
+  encoders.getCountsAndResetRight();
+}
+
+float Motoren::getDistanceTraveled() {
+  // Get average encoder counts and convert to distance
+  // Zumo32U4 has ~75.81 counts per cm (assuming 120:1 gear ratio and 3.2cm wheel diameter)
+  long leftCount = abs(encoders.getCountsLeft());
+  long rightCount = abs(encoders.getCountsRight());
+  long avgCount = (leftCount + rightCount) / 2;
+  return avgCount / 75.81; // Convert to cm
+}
+
+long Motoren::getLeftEncoderCount() {
+  return encoders.getCountsLeft();
+}
+
+long Motoren::getRightEncoderCount() {
+  return encoders.getCountsRight();
 }

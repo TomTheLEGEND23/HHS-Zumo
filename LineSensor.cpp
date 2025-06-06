@@ -7,7 +7,7 @@ LineSensor::LineSensor() {
   zumoLineSensor.initFiveSensors();
 }
 
-void LineSensor::calibrateLineSensor(Xbee &xbee) {
+void LineSensor::calibrateLineSensor(XBee &xbee) {
   Serial1.println("Put on white area");
   xbee.update();
   while (!xbee.isButtonPressed('c')) {

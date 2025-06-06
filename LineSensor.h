@@ -7,7 +7,7 @@ class LineSensor
 {
 public:
     LineSensor();
-    void calibrateLineSensor(Xbee &xbee);
+    void calibrateLineSensor(XBee &xbee);
     String detectedLine(int);
     unsigned int giveRawValue(int);
     int readLine();
