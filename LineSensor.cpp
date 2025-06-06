@@ -1,3 +1,4 @@
+#include "USBAPI.h"
 #include "HardwareSerial.h"
 #include "LineSensor.h"
 #include <Arduino.h>
@@ -6,70 +7,67 @@ LineSensor::LineSensor() {
   zumoLineSensor.initFiveSensors();
 }
 
-void LineSensor::calibrateLineSensor() {
-  Xbee xbeeContinue('c');
-  Serial1.begin(19200);
-  Serial.begin(9600);
+void LineSensor::calibrateLineSensor(Xbee &xbee) {
   Serial1.println("Put on white area");
-  Serial.println("Put on white area");
-  while (!xbeeContinue.isButtonPressed()) {
-    // wait here
+  xbee.update();
+  while (!xbee.isButtonPressed('c')) {
+    xbee.update();
   }
   Serial1.println("Calibrating...");
-  Serial.println("Calibrating...");
-  for (uint16_t i = 0; i < 30; i++) {
+  for (uint16_t i = 0; i < 40; i++) {
     zumoLineSensor.calibrate();
   }
+
   Serial1.println("Put on black area");
-  Serial.println("Put on black area");
-  while (!xbeeContinue.isButtonPressed()) {
-    // wait here
+  xbee.update();
+  while (!xbee.isButtonPressed('c')) {
+    xbee.update();
   }
   Serial1.println("Calibrating...");
-  Serial.println("Calibrating...");
-  for (uint16_t i = 0; i < 30; i++) {
-    zumoLineSensor.calibrate();
+  zumoLineSensor.read(linesensorRawValue);
+  for (uint16_t i = 0; i <= 4; i++) {
+    blackThreshold[i] = linesensorRawValue[i] / 2 - 100;
+    Serial1.println(linesensorRawValue[i]);
   }
+
   Serial1.println("Put on green area");
-  Serial.println("Put on green area");
-  while (!xbeeContinue.isButtonPressed()) {
-    // wait here
+  xbee.update();
+  while (!xbee.isButtonPressed('c')) {
+    xbee.update();
   }
   Serial1.println("Calibrating...");
-  Serial.println("Calibrating...");
-  for (uint16_t i = 0; i < 30; i++) {
+  zumoLineSensor.read(linesensorRawValue);
+  for (uint16_t i = 0; i <= 4; i++) {
+    greenThreshold[i] = linesensorRawValue[i] - 30;
+    Serial1.println(linesensorRawValue[i]);
+  }
+  for (uint16_t i = 0; i < 40; i++) {
     zumoLineSensor.calibrate();
   }
-  Serial1.println("Put on brown area");
-  Serial.println("Put on brown area");
-  while (!xbeeContinue.isButtonPressed()) {
-    // wait here
-  }
-  Serial1.println("Calibrating...");
-  Serial.println("Calibrating...");
-  for (uint16_t i = 0; i < 30; i++) {
-    zumoLineSensor.calibrate();
-  }
-  Serial1.println("Finished line Calibration, press c to continue");
-  Serial.println("Finished line Calibration, press c to continue");
+
+  Serial1.println("Finished line Calibration!");
 }
 
+
+
 String LineSensor::detectedLine(int l) {
-  zumoLineSensor.readCalibrated(lineSensorValues);
-  if (lineSensorValues[l] >= blackThreshold) {
+  zumoLineSensor.read(lineSensorValues);
+  zumoLineSensor.read(linesensorRawValue);
+  if (linesensorRawValue[l] >= blackThreshold[l]) {
     return "Black";
-  } else if (lineSensorValues[l] >= grayThresholdbottom && lineSensorValues[l] <= grayThresholdtop) {
-    return "Gray";
-  } else if (lineSensorValues[l] >= greenThresholdbottom && lineSensorValues[l] <= greenThresholdtop) {
+  }
+  else if (linesensorRawValue[l] >= greenThreshold[l]) {
     return "Green";
-  } else if (lineSensorValues[l] >= brownThresholdbottom && lineSensorValues[l] <= brownThresholdtop) {
-    return "Brown";
   } else {
     return "White";
   }
 }
 
+int LineSensor::readLine() {
+  return zumoLineSensor.readLine(lineSensorValues);
+}
+
 unsigned int LineSensor::giveRawValue(int l) {
-  zumoLineSensor.readCalibrated(lineSensorValues);
-  return lineSensorValues[l];
+  zumoLineSensor.read(linesensorRawValue);
+  return linesensorRawValue[l];
 }

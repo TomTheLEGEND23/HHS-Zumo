@@ -1,10 +1,6 @@
 #include "Motor.h"
 
-Motoren::Motoren():status(true),EBrake(false),CalibratieOffsetL(0),CalibratieOffsetR(0) {
-}
-
-void Motoren::SetEBrake(bool e) {
-  EBrake = e;
+Motoren::Motoren():status(true), staticSpeed(0) {
 }
 
 void Motoren::Stop() {
@@ -14,49 +10,51 @@ void Motoren::Stop() {
 void Motoren::GaVooruit(int speed) {
   SpeedL = speed;
   SpeedR = speed;
-  if (!EBrake) {
-    Motor.setSpeeds(SpeedL, SpeedR);
-  }
+  staticSpeed = speed;
+  Motor.setSpeeds(SpeedL, SpeedR);
+}
+
+void Motoren::SetStaticSpeed(int speed) {
+  SpeedL = speed;
+  SpeedR = speed;
+  staticSpeed = speed;
 }
 
 void Motoren::GaAchteruit(int speed) {
-  SpeedL = speed * -1;
-  SpeedR = speed * -1;
-  if (!EBrake) {
-    Motor.setSpeeds(SpeedL, SpeedR);
-  }
+  SpeedL = -speed;
+  SpeedR = -speed;
+  staticSpeed = -speed;
+  Motor.setSpeeds(SpeedL, SpeedR);
 }
 
 void Motoren::GaLinks(int speed) {
+  SpeedL = staticSpeed;
+  SpeedR = staticSpeed;
+
   if (SpeedL > 0) {
-    SpeedL -= speed;
-  }
-  else if (SpeedR < 0) {
-    SpeedL += speed;
-  }
-  else if (speed == 0) {
-    SpeedL = speed * -1;
+    SpeedL = staticSpeed - speed;
+  } else if (SpeedL < 0) {
+    SpeedL = staticSpeed + speed;
+  } else {
+    SpeedL = -speed;
     SpeedR = speed;
   }
 
-  if (!EBrake) {
-    Motor.setSpeeds(SpeedL, SpeedR);
-  }
+  Motor.setSpeeds(SpeedL, SpeedR);
 }
 
 void Motoren::GaRechts(int speed) {
+  SpeedL = staticSpeed;
+  SpeedR = staticSpeed;
+
   if (SpeedR > 0) {
-    SpeedR -= speed;
-  }
-  else if (SpeedR < 0) {
-    SpeedR += speed;
-  }
-  else if (SpeedR == 0) {
-    SpeedR = speed  * -1;
+    SpeedR = staticSpeed - speed;
+  } else if (SpeedR < 0) {
+    SpeedR = staticSpeed + speed;
+  } else {
+    SpeedR = -speed;
     SpeedL = speed;
   }
 
-  if (!EBrake) {
-    Motor.setSpeeds(SpeedL, SpeedR);
-  }
+  Motor.setSpeeds(SpeedL, SpeedR);
 }

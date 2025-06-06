@@ -11,17 +11,15 @@ public:
   void GaRechts(int);
   void GaAchteruit(int);
   void Stop();
-  void SetEBrake(bool);
-  void SetCalibration(int, int);
+  void SetStaticSpeed(int);
 
 private:
   Zumo32U4Motors Motor;
-  int CalibratieOffsetL;
-  int CalibratieOffsetR;
   bool status;
+  int staticSpeed;
   int SpeedL;
   int SpeedR;
   bool EBrake;
 };
 
-#endif  // XBEE_H
+#endif

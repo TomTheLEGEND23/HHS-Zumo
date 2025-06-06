@@ -2,11 +2,11 @@
 
 // Constructor for the IMU class.
 // Initializes the IMU with given magnetometer calibration values.
-IMU::IMU():status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0), magCalX(0.0), magCalY(0.0) {
+IMU::IMU():status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0) {
 }
 
 // Initializes the IMU sensor and calculates accelerometer and gyroscope bias.
-bool IMU::init(int x, int y) {
+bool IMU::init() {
   Wire.begin();
   imu.enableDefault();
   if (imu.init()) {
@@ -31,9 +31,6 @@ bool IMU::init(int x, int y) {
   gyroBiasX /= 100;
   gyroBiasY /= 100;
   gyroBiasZ /= 100;
-
-  magCalX = x;
-  magCalY = y;
 
   return status;
 }
@@ -80,35 +77,6 @@ float IMU::gyroZ() {
   return imu.g.z * 8.75 / 1000.0 - gyroBiasZ;
 }
 
-// Calculates compass heading with tilt compensation.
-float IMU::compassHeading() {
-  imu.read();
-
-  float ax = imu.a.x * 0.061 * 9.80665 / 1000.0 - accelBiasX;
-  float ay = imu.a.y * 0.061 * 9.80665 / 1000.0 - accelBiasY;
-  float az = imu.a.z * 0.061 * 9.80665 / 1000.0 - accelBiasZ;
-
-  float mx = imu.m.x - magCalX;
-  float my = imu.m.y - magCalY;
-
-  float accNorm = sqrt(ax * ax + ay * ay + az * az);
-  float ax_n = ax / accNorm;
-  float ay_n = ay / accNorm;
-  float az_n = az / accNorm;
-
-  float pitch = asin(-ax_n);
-  float roll = atan2(ay_n, az_n);
-
-  float mx_comp = mx * cos(pitch);
-  float my_comp = mx * sin(roll) * sin(pitch) + my * cos(roll);
-
-  float heading = atan2(-my_comp, mx_comp) * (180.0 / PI);
-  if (heading < 0) heading += 360.0;
-
-  return heading;
-}
-
-// Calculates pitch angle based on accelerometer data.
 float IMU::pitch() {
   imu.read();
 

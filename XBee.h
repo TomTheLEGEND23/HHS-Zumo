@@ -2,19 +2,16 @@
 #define XBEE_H
 
 #include <Arduino.h>
-#include "WString.h"
-
 
 class Xbee {
 public:
-    Xbee(char);
-    bool isButtonPressed();
-    
+    Xbee();
+    void update();
+    bool isButtonPressed(char c);
+
 private:
-    bool status;
-    char storedButton;
-    char pressedButton;
-    bool pressed;
+    char lastChar;
+    bool available;
 };
 
-#endif  // XBEE_H
+#endif

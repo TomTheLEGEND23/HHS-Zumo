@@ -5,14 +5,13 @@
 class IMU {
 public:
   IMU();
-  bool init(int, int);
+  bool init();
   float accelX();
   float accelY();
   float accelZ();
   float gyroX();
   float gyroY();
   float gyroZ();
-  float compassHeading();
   bool fetchStatus();
   float pitch();
   float roll();
@@ -28,7 +27,4 @@ private:
   float gyroBiasX;
   float gyroBiasY;
   float gyroBiasZ;
-
-  float magCalX;
-  float magCalY;
 };

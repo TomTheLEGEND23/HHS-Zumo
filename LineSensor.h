@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "WString.h"
 #include <Zumo32U4.h>
 #include "XBee.h"
@@ -6,20 +7,15 @@ class LineSensor
 {
 public:
     LineSensor();
-    void calibrateLineSensor();
+    void calibrateLineSensor(Xbee &xbee);
     String detectedLine(int);
     unsigned int giveRawValue(int);
+    int readLine();
 
 private:
-    const uint16_t blackThreshold = 800;
-    const uint16_t grayThresholdtop = 380;
-    const uint16_t grayThresholdbottom = 280;
-    const uint16_t greenThresholdtop = 180;
-    const uint16_t greenThresholdbottom = 140;
-    const uint16_t brownThresholdtop = 130;
-    const uint16_t brownThresholdbottom = 100;
+    uint16_t blackThreshold[5];
+    uint16_t greenThreshold[5];
     unsigned int lineSensorValues[5];
+    unsigned int linesensorRawValue[5];
     Zumo32U4LineSensors zumoLineSensor;
-    Zumo32U4ButtonA zumoAButton;
-
 };
