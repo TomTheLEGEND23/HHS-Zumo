@@ -1,21 +1,24 @@
+#ifndef LINESENSOR_H
+#define LINESENSOR_H
+
 #include <stdint.h>
 #include "WString.h"
 #include <Zumo32U4.h>
 #include "XBee.h"
+#include "Motor.h"
 
 class LineSensor
 {
 public:
     LineSensor();
-    void calibrateLineSensor(Xbee &xbee);
-    String detectedLine(int);
-    unsigned int giveRawValue(int);
-    int readLine();
+    void calibrateLineSensor(Xbee &xbee, Motoren &motors);
+    int detectedLine();
+    unsigned int giveRawValue(int index);
 
 private:
-    uint16_t blackThreshold[5];
-    uint16_t greenThreshold[5];
-    unsigned int lineSensorValues[5];
+private:
     unsigned int linesensorRawValue[5];
     Zumo32U4LineSensors zumoLineSensor;
 };
+
+#endif

@@ -1,5 +1,3 @@
-#include "USBAPI.h"
-#include "HardwareSerial.h"
 #include "LineSensor.h"
 #include <Arduino.h>
 
@@ -7,67 +5,58 @@ LineSensor::LineSensor() {
   zumoLineSensor.initFiveSensors();
 }
 
-void LineSensor::calibrateLineSensor(Xbee &xbee) {
-  Serial1.println("Put on white area");
+void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
+  Serial1.println("Starting calibration: spin robot slowly over the line.");
+
+  // Wait for 'c' button press to start
+  Serial1.println("Press 'c' to start calibration...");
   xbee.update();
   while (!xbee.isButtonPressed('c')) {
     xbee.update();
   }
-  Serial1.println("Calibrating...");
-  for (uint16_t i = 0; i < 40; i++) {
+
+  // Spin robot slowly to sweep sensors over line and background
+  motors.turn(200, -200);  // spin in place
+
+  unsigned long startTime = millis();
+  while (millis() - startTime < 2000) {  // calibrate for 5 seconds
     zumoLineSensor.calibrate();
   }
-
-  Serial1.println("Put on black area");
-  xbee.update();
-  while (!xbee.isButtonPressed('c')) {
-    xbee.update();
-  }
-  Serial1.println("Calibrating...");
-  zumoLineSensor.read(linesensorRawValue);
-  for (uint16_t i = 0; i <= 4; i++) {
-    blackThreshold[i] = linesensorRawValue[i] / 2 - 100;
-    Serial1.println(linesensorRawValue[i]);
-  }
-
-  Serial1.println("Put on green area");
-  xbee.update();
-  while (!xbee.isButtonPressed('c')) {
-    xbee.update();
-  }
-  Serial1.println("Calibrating...");
-  zumoLineSensor.read(linesensorRawValue);
-  for (uint16_t i = 0; i <= 4; i++) {
-    greenThreshold[i] = linesensorRawValue[i] - 30;
-    Serial1.println(linesensorRawValue[i]);
-  }
-  for (uint16_t i = 0; i < 40; i++) {
+  motors.turn(-200, 200);  // spin in place
+  startTime = millis();
+  while (millis() - startTime < 2000) {  // calibrate for 5 seconds
     zumoLineSensor.calibrate();
   }
+  motors.Stop();
 
-  Serial1.println("Finished line Calibration!");
-}
-
-
-
-String LineSensor::detectedLine(int l) {
-  zumoLineSensor.read(lineSensorValues);
-  zumoLineSensor.read(linesensorRawValue);
-  if (linesensorRawValue[l] >= blackThreshold[l]) {
-    return "Black";
-  }
-  else if (linesensorRawValue[l] >= greenThreshold[l]) {
-    return "Green";
-  } else {
-    return "White";
-  }
-}
-
-int LineSensor::readLine() {
-  return zumoLineSensor.readLine(lineSensorValues);
+  Serial1.println("Calibration complete!");
 }
 
 unsigned int LineSensor::giveRawValue(int l) {
-  zumoLineSensor.read(linesensorRawValue);
+  zumoLineSensor.readCalibrated(linesensorRawValue);
   return linesensorRawValue[l];
+}
+
+int LineSensor::detectedLine() {
+  zumoLineSensor.readCalibrated(linesensorRawValue);
+
+  unsigned long weightedSum = 0;
+  unsigned int total = 0;
+
+  // Map sensor indices to position values (0 to 4000)
+  const int positionMap[5] = {0, 1000, 2000, 3000, 4000};
+
+  for (int i = 0; i < 5; i++) {
+    int value = linesensorRawValue[i];  // 0 (white) to 1000 (black)
+    weightedSum += (unsigned long)value * positionMap[i];
+    total += value;
+  }
+
+  // If all sensors see white (very low readings), no line is detected
+  if (total < 200) {  // Adjust threshold as needed based on surface
+    return -1;
+  }
+
+  // Compute average position
+  return weightedSum / total;  // Returns a value between 0 and 4000
 }

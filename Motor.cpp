@@ -3,58 +3,38 @@
 Motoren::Motoren():status(true), staticSpeed(0) {
 }
 
+void Motoren::Beweeg() {
+  SpeedL = staticSpeed;
+  SpeedR = staticSpeed;
+  Motor.setSpeeds(SpeedL, SpeedR);
+}
+
+void Motoren::turn(int l, int r) {
+  SpeedL = l;
+  SpeedR = r;
+  Motor.setSpeeds(SpeedL, SpeedR);
+}
+
 void Motoren::Stop() {
+  staticSpeed = 0;
   Motor.setSpeeds(0, 0);
 }
 
-void Motoren::GaVooruit(int speed) {
-  SpeedL = speed;
-  SpeedR = speed;
-  staticSpeed = speed;
-  Motor.setSpeeds(SpeedL, SpeedR);
-}
 
-void Motoren::SetStaticSpeed(int speed) {
+void Motoren::SetSpeed(int speed) {
   SpeedL = speed;
   SpeedR = speed;
   staticSpeed = speed;
 }
 
-void Motoren::GaAchteruit(int speed) {
-  SpeedL = -speed;
-  SpeedR = -speed;
-  staticSpeed = -speed;
-  Motor.setSpeeds(SpeedL, SpeedR);
+int Motoren::GetSpeed() {
+  return staticSpeed;
 }
 
-void Motoren::GaLinks(int speed) {
-  SpeedL = staticSpeed;
-  SpeedR = staticSpeed;
-
-  if (SpeedL > 0) {
-    SpeedL = staticSpeed - speed;
-  } else if (SpeedL < 0) {
-    SpeedL = staticSpeed + speed;
-  } else {
-    SpeedL = -speed;
-    SpeedR = speed;
-  }
-
-  Motor.setSpeeds(SpeedL, SpeedR);
+int Motoren::GetEncoderRight() {
+  return encodertje.getCountsRight();
 }
 
-void Motoren::GaRechts(int speed) {
-  SpeedL = staticSpeed;
-  SpeedR = staticSpeed;
-
-  if (SpeedR > 0) {
-    SpeedR = staticSpeed - speed;
-  } else if (SpeedR < 0) {
-    SpeedR = staticSpeed + speed;
-  } else {
-    SpeedR = -speed;
-    SpeedL = speed;
-  }
-
-  Motor.setSpeeds(SpeedL, SpeedR);
+int Motoren::GetEncoderLeft() {
+  return encodertje.getCountsLeft();
 }

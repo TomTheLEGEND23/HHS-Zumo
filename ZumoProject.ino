@@ -10,14 +10,12 @@ LineSensor linesensor;
 ProximitySensors proximitysensor;
 Xbee xbee;
 
-bool moving = false;
 bool automationRunning = false;
-int motorspeed = 300;
-int halfspeed = 
 
-int previousLinePosition = 2000;
-unsigned long lastHighTime = 0;
-bool AllWhite = false;
+// Control parameters
+#define BASE_SPEED 400     // Adjust depending on your robot's motor power
+#define MAX_SPEED 400
+#define KP 1.0            // Proportional gain
 
 void setup() {
 }
@@ -25,60 +23,50 @@ void setup() {
 void loop() {
   xbee.update();
 
+  // Start calibration
   if (xbee.isButtonPressed('c')) {
     imu.init();
-    linesensor.calibrateLineSensor(xbee);
+    linesensor.calibrateLineSensor(xbee, motor);
   }
 
+  // Start line following
   if (xbee.isButtonPressed('p')) {
     automationRunning = true;
-    moving = false;
   }
 
+  // Stop line following
   if (xbee.isButtonPressed('o')) {
     automationRunning = false;
     motor.Stop();
-    moving = false;
   }
 
+  // Line following logic
   if (automationRunning) {
-    int linePosition = linesensor.readLine();  // 0 to 4000
-    bool centerSeesLine = linesensor.detectedLine(2) == "Black";
-    static int aggressiveness = 80;  // Base steering power
-    unsigned long currentTime = millis();
+    int linePos = linesensor.detectedLine();
 
-    if (!moving) {
-      motor.GaVooruit(motorspeed);
-      moving = true;
-    }
-
-    // --- Adaptive Aggressiveness ---
-    if (!centerSeesLine) {
-      aggressiveness += 40;  // Increase correction force
-      if (aggressiveness > 400) aggressiveness = 400;
-    } else {
-      aggressiveness = 80;  // Reset when center sees the line
+    if (linePos == -1) {
+      // No line detected — move forward at half speed
+      motor.SetSpeed(BASE_SPEED/2);
+      motor.Beweeg();
+      return;
     }
 
-    // --- Forward or Line Following ---
-    if (linePosition == 4000 || linePosition == 0) {
-      for (int i = 0; i < 5; i++) {
-        if (linesensor.detectedLine(i) != "White") {
-          AllWhite = false;
-          break;  // No need to keep checking
-        }
-        Serial1.println("forloop");
-      }
-      AllWhite = true;
-    }
-    if (AllWhite) {
-      motor.GaVooruit(motorspeed);
-    } else if (linePosition > 2000 && !AllWhite) {
-      int rightPower = map(linePosition, 2000, 4000, aggressiveness / 2, aggressiveness);
-      motor.GaRechts(rightPower);
-    } else if (linePosition < 2000 && !AllWhite) {
-      int leftPower = map(linePosition, 0, 2000, aggressiveness / 2, aggressiveness);
-      motor.GaLinks(leftPower);
-    }
+    // Calculate error from center (2000)
+    int error = linePos - 2000;
+
+    // Proportional correction
+    int correction = KP * error;
+
+    // Compute motor speeds
+    int leftSpeed = BASE_SPEED + correction;
+    int rightSpeed = BASE_SPEED - correction;
+
+    // Constrain speeds
+    leftSpeed = constrain(leftSpeed, -MAX_SPEED, MAX_SPEED);
+    rightSpeed = constrain(rightSpeed, -MAX_SPEED, MAX_SPEED);
+
+    // Drive using your Motoren class
+    motor.turn(leftSpeed, rightSpeed);
+    Serial1.println(linesensor.detectedLine());
   }
 }

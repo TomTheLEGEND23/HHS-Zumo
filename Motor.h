@@ -6,20 +6,21 @@
 class Motoren {
 public:
   Motoren();
-  void GaVooruit(int);
-  void GaLinks(int);
-  void GaRechts(int);
-  void GaAchteruit(int);
+  void Beweeg();
+  void turn(int, int);
   void Stop();
-  void SetStaticSpeed(int);
+  void SetSpeed(int);
+  int GetSpeed();
+  int GetEncoderLeft();
+  int GetEncoderRight();
 
 private:
   Zumo32U4Motors Motor;
+  Zumo32U4Encoders encodertje;
   bool status;
   int staticSpeed;
   int SpeedL;
   int SpeedR;
-  bool EBrake;
 };
 
 #endif
