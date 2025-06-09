@@ -3,14 +3,18 @@
 #include "Motor.h"
 #include "LineSensor.h"
 #include "ProximitySensors.h"
+#include "XbeeInputProcessing.h"
 
 IMU imu;
 Motoren motor;
 LineSensor linesensor;
 ProximitySensors proximitysensor;
 Xbee xbee;
+XbeeInputProcessing xbeeinputprocessing;
 
 bool automationRunning = false;
+bool lineSensorCalibration = false;
+char ReChar;
 
 // Control parameters
 #define BASE_SPEED 400     // Adjust depending on your robot's motor power
@@ -21,25 +25,34 @@ void setup() {
 }
 
 void loop() {
-  xbee.update();
-
+  // xbee.update();
   // Start calibration
-  if (xbee.isButtonPressed('c')) {
+  // if (xbee.isButtonPressed('c')) {
+  //   imu.init();
+  //   linesensor.calibrateLineSensor(xbee, motor);
+  // };
+  if (lineSensorCalibration) {
     imu.init();
     linesensor.calibrateLineSensor(xbee, motor);
-  }
+    lineSensorCalibration = false;
+  };
 
   // Start line following
-  if (xbee.isButtonPressed('p')) {
-    automationRunning = true;
-  }
+  // if (xbee.isButtonPressed('p')) {
+  //   Serial1.println("Program running");
+  //   automationRunning = true;
+  // }
 
-  // Stop line following
-  if (xbee.isButtonPressed('o')) {
-    automationRunning = false;
-    motor.Stop();
-  }
-
+  // // Stop line following
+  // if (xbee.isButtonPressed('o')) {
+  //   Serial1.println("Program stopped");
+  //   automationRunning = false;
+  //   motor.Stop();
+  // }
+  if (Serial1.available()) {
+    ReChar = xbee.readS1();
+    xbeeinputprocessing.processKeyInput(ReChar);
+  };
   // Line following logic
   if (automationRunning) {
     int linePos = linesensor.detectedLine();
@@ -49,7 +62,7 @@ void loop() {
       motor.SetSpeed(BASE_SPEED/2);
       motor.Beweeg();
       return;
-    }
+    };
 
     // Calculate error from center (2000)
     int error = linePos - 2000;
@@ -67,6 +80,6 @@ void loop() {
 
     // Drive using your Motoren class
     motor.turn(leftSpeed, rightSpeed);
-    Serial1.println(linesensor.detectedLine());
+    // Serial1.println(linesensor.detectedLine());
   }
 }

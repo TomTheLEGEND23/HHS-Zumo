@@ -8,10 +8,14 @@ public:
     Xbee();
     void update();
     bool isButtonPressed(char c);
+    char getLastChar();
+    bool isLastChar(char c);
+    void setLastChar(char c);
+    char readS1();
 
 private:
-    char lastChar;
     bool available;
+    char lastChar;
 };
 
 #endif

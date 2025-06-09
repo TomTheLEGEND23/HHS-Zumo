@@ -8,12 +8,17 @@ LineSensor::LineSensor() {
 void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   Serial1.println("Starting calibration: spin robot slowly over the line.");
 
+
   // Wait for 'c' button press to start
-  Serial1.println("Press 'c' to start calibration...");
-  xbee.update();
-  while (!xbee.isButtonPressed('c')) {
-    xbee.update();
-  }
+//   Serial1.println("Press 'c' to start calibration...");
+//   xbee.update();
+//   while (!xbee.isButtonPressed('c')) {
+//     xbee.update();
+//   };
+
+  // Alternative to the previous waiting for C input
+  Serial1.println("Waiting for 2.5 seconds");
+  delay(2500);
 
   // Spin robot slowly to sweep sensors over line and background
   motors.turn(200, -200);  // spin in place
@@ -21,12 +26,12 @@ void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   unsigned long startTime = millis();
   while (millis() - startTime < 2000) {  // calibrate for 5 seconds
     zumoLineSensor.calibrate();
-  }
+  };
   motors.turn(-200, 200);  // spin in place
   startTime = millis();
   while (millis() - startTime < 2000) {  // calibrate for 5 seconds
     zumoLineSensor.calibrate();
-  }
+  };
   motors.Stop();
 
   Serial1.println("Calibration complete!");
