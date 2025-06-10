@@ -17,14 +17,11 @@ void PrintInfo::printHelp() {
         Serial1.println(F("S         | Move backward                | Manual control mode | Case insensitive"));
         Serial1.println(F("A         | Turn left                    | Manual control mode | Case insensitive"));
         Serial1.println(F("D         | Turn right                   | Manual control mode | Case insensitive"));
-        Serial1.println(F("  or 0    | Stop                         | Manual control mode | Blank (eg spacebar)"));
+        Serial1.println(F("  or 0    | Stop                         | None                | Blank (eg spacebar)"));
         Serial1.println(F("X         | Print Diagnostics to XBee    | None                | Case insensitive"));
-        Serial1.println(F("+ or =    | Increase speed               | Manual control mode | Prints new speed to XBee"));
-        Serial1.println(F("- or _    | Decrease speed               | Manual control mode | Prints new speed to XBee"));
-        Serial1.println(F("M         | Reset speed                  | Manual control mode | Prints new speed to XBee"));
         Serial1.println(F("H         | Print overview of commands   | None                | Case insensitive"));
         Serial1.println(F("P         | Start linefollowing          | None                | Case insensitive"));
-        Serial1.println(F("O         | Stop linefollowing           | None                | Case insensitive"));
+        Serial1.println(F("O         | Stop linefollowing & motors  | None                | Case insensitive"));
         Serial1.println(F("----------+------------------------------+---------------------+-----------------------------"));
 }
 

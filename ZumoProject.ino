@@ -68,7 +68,8 @@ void loop() {
   if (xbee.isButtonPressed('d') && !automationRunning) {
         motor.turn(BASE_SPEED, -BASE_SPEED);
   }
-  if (xbee.isButtonPressed(' ')) {
+  if (xbee.isButtonPressed(' ') || xbee.isButtonPressed('0')) {
+    Serial1.println("Program stopped");
     automationRunning = false;
     motor.Stop();
   }

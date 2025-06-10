@@ -1,4 +1,4 @@
-#include "Xbee.h"
+#include "XBee.h"
 #include <ctype.h>
 
 Xbee::Xbee() : lastChar(), available(false) {
@@ -20,18 +20,4 @@ bool Xbee::isButtonPressed(char c) {
 
 char Xbee::getLastChar() {
     return lastChar;
-}
-
-bool Xbee::isLastChar(char c)
-{
-    return lastChar == c; 
-}
-
-void Xbee::setLastChar(char c) {
-    lastChar = c; 
-}
-
-char Xbee::readS1() {
-    char receivedChar = Serial1.read();
-    return receivedChar;
 }

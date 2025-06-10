@@ -9,11 +9,8 @@
 |`S` | Move backward | Manual control mode | Case insensitive |
 |`A` | Turn left | Manual control mode | Case insensitive |
 |`D` | Turn right | Manual control mode | Case insensitive |
-|` ` or `0`| Stop | Manual control mode | Blank (eg spacebar) |
+|` ` or `0`| Stop | None | Blank (eg spacebar) |
 |`X` | Print Diagnostics to XBee remote | None | Case insensitive |
-|`+` or `=` | Increase speed | Manual control mode | Prints the new speed to XBee |
-|`-` or `_` | Decrease speed | Manual control mode | Prints the new speed to XBee |
-|`M` | Reset speed to default | Manual control mode | Case insensitive |
 |`H` | Print an overview of all commands</br> for the current mode of operation | None | Case insensitive |
 |`P` | Start linefollowing | None | Case insensitive |
 |`O` | Stop linefollowing | None | Case insensitive |
@@ -30,12 +27,9 @@ Serial1.println(F("W         | Move forward                 | Manual control mod
 Serial1.println(F("S         | Move backward                | Manual control mode | Case insensitive"));
 Serial1.println(F("A         | Turn left                    | Manual control mode | Case insensitive"));
 Serial1.println(F("D         | Turn right                   | Manual control mode | Case insensitive"));
-Serial1.println(F("  or 0    | Stop                         | Manual control mode | Blank (eg spacebar)"));
+Serial1.println(F("  or 0    | Stop                         | None                | Blank (eg spacebar)"));
 Serial1.println(F("X         | Print Diagnostics to XBee    | None                | Case insensitive"));
-Serial1.println(F("+ or =    | Increase speed               | Manual control mode | Prints new speed to XBee"));
-Serial1.println(F("- or _    | Decrease speed               | Manual control mode | Prints new speed to XBee"));
-Serial1.println(F("M         | Reset speed                  | Manual control mode | Prints new speed to XBee"));
 Serial1.println(F("H         | Print overview of commands   | None                | Case insensitive"));
 Serial1.println(F("P         | Start linefollowing          | None                | Case insensitive"));
-Serial1.println(F("O         | Stop linefollowing           | None                | Case insensitive"));
+Serial1.println(F("O         | Stop linefollowing & motors  | None                | Case insensitive"));
 ```
