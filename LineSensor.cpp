@@ -5,14 +5,6 @@ LineSensor::LineSensor() {
   zumoLineSensor.initFiveSensors();
 }
 
-void LineSensor::emitteroff() {
-  zumoLineSensor.emittersOff();
-}
-
-void LineSensor::emitteron() {
-  zumoLineSensor.emittersOn();
-}
-
 void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   Serial1.println("Starting calibration: spin robot slowly over the line.");
 
@@ -22,22 +14,6 @@ void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   while (!xbee.isButtonPressed('c')) {
     xbee.update();
   }
-
-  // Spin robot slowly to sweep sensors over line and background
-  motors.turn(200, -200);  // spin in place
-
-  unsigned long startTime = millis();
-  while (millis() - startTime < 1500) {  // calibrate for 2.5 seconds
-    zumoLineSensor.calibrate();
-  }
-  motors.turn(-200, 200);  // spin in place opposite direction
-  startTime = millis();
-  while (millis() - startTime < 1500) {  // calibrate for 2.5 seconds
-    zumoLineSensor.calibrate();
-  }
-  motors.Stop();
-
-  Serial1.println("Calibration complete!");
 
   // Find and store minimum detection values
   unsigned int sensorValues[5];
@@ -74,25 +50,26 @@ int LineSensor::giveCalValue(int l) {
 }
 
 int LineSensor::detectedLine() {
-  zumoLineSensor.readCalibrated(linesensorRawValue);
+  zumoLineSensor.read(linesensorRawValue);
 
-  unsigned long weightedSum = 0;
-  unsigned int total = 0;
+  int adjustedValues[5];
+  int total = 0;
+  long weightedSum = 0;
 
-  // Map sensor indices to position values (0 to 4000)
-  const int positionMap[5] = { 0, 1000, 2000, 3000, 4000 };
+  const int positionMap[5] = {0, 1000, 2000, 3000, 4000};
 
   for (int i = 0; i < 5; i++) {
-    int value = linesensorRawValue[i];  // 0 (white) to 1000 (black)
-    weightedSum += (unsigned long)value * positionMap[i];
-    total += value;
+    adjustedValues[i] = linesensorRawValue[i] - MinimumDetection[i];
+    if (adjustedValues[i] < 0) adjustedValues[i] = 0;
+
+    total += adjustedValues[i];
+    weightedSum += (long)adjustedValues[i] * positionMap[i];
   }
 
-  // If all sensors see white (very low readings), no line is detected
-  if (total < 200) {  // Adjust threshold as needed based on surface
+  if (total < 100) { // total adjusted signal too low
     return -1;
   }
 
-  // Compute average position
-  return weightedSum / total;  // Returns a value between 0 and 4000
+  return weightedSum / total;
 }
+

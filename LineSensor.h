@@ -15,8 +15,6 @@ public:
     int detectedLine();
     int giveRawValue(int);
     int giveCalValue(int);
-    void emitteroff();
-    void emitteron();
 
 private:
     unsigned int linesensorRawValue[5];
