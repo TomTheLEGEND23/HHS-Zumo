@@ -3,52 +3,53 @@
 #include "Motor.h"
 #include "LineSensor.h"
 
-extern Xbee xbee;
-extern Motoren motor;
+// extern Xbee xbee;
+// extern Motoren motor;
 extern LineSensor linesensor;
 int MAN_SPEED = 300;
 int MAN_TURN_SPEED = MAN_SPEED / 2;
 extern bool automationRunning;
 extern bool lineSensorCalibration;
 
+// #define MAN_SPEED 300
+// #define MAN_TURN_SPEED (MAN_SPEED / 2)
+
 XbeeInputProcessing::XbeeInputProcessing(){}
 
-void XbeeInputProcessing::processKeyInput(char ReChar) {
+void XbeeInputProcessing::processKeyInput(char ReChar, Xbee &xbee, Motoren &motors) {
     // Serial1.println(ReChar);
     inputString = ReChar;
     if (!automationRunning) {
-        processKeyPressMan();
+        processKeyPressMan(xbee, motors);
     } else if (automationRunning) {
-        processKeyPressRun();
+        processKeyPressRun(xbee, motors);
     }
 }
 
-void XbeeInputProcessing::processKeyPressMan() {
+void XbeeInputProcessing::processKeyPressMan(Xbee &xbee, Motoren &motors) {
     char command = inputString[0];
     // Serial1.println("Manual Control Enabled");
     // Serial1.println(command);
     if ((command == 'W') || (command == 'w')) {
         Serial1.println("Moving Forward");
-        motor.SetSpeed(MAN_SPEED);
-        motor.Beweeg();
+        motors.SetSpeed(MAN_SPEED);
+        motors.Beweeg();
     }
     else if ((command == 'A') || (command == 'a')) {
         Serial1.println("Turning left");
-        motor.turn(MAN_TURN_SPEED*-1, MAN_TURN_SPEED);
-        //motor.Beweeg();
+        motors.turn(-MAN_TURN_SPEED, MAN_TURN_SPEED);
     }
     else if ((command == 'S') || (command == 's')) {
         Serial1.println("Moving Back");
-        motor.SetSpeed(MAN_SPEED*-1);
-        motor.Beweeg();
+        motors.SetSpeed(-MAN_SPEED);
+        motors.Beweeg();
     }
     else if ((command == 'D') || (command == 'd')) {
         Serial1.println("Turning right");
-        motor.turn(MAN_TURN_SPEED, MAN_TURN_SPEED*-1);
-        //motor.Beweeg();
+        motors.turn(MAN_TURN_SPEED, -MAN_TURN_SPEED);
     }
     else if ((command == ' ') || (command == 0)) {
-        motor.Stop();
+        motors.Stop();
     }
     else if ((command == 'X') || (command == 'x')) {
         Serial1.println("--- Zumo Diagnostics ---");
@@ -64,10 +65,13 @@ void XbeeInputProcessing::processKeyPressMan() {
     }
     else if ((command == '+') || (command == '=')) {
         MAN_SPEED = MAN_SPEED + 50;
+        MAN_TURN_SPEED = MAN_SPEED / 2;
         Serial1.print("Increased Motor Speed. It's now ");
         Serial1.println(MAN_SPEED);
     }
     else if ((command == '-') || (command == '_')) {
+        MAN_SPEED = MAN_SPEED - 50;
+        MAN_TURN_SPEED = MAN_SPEED / 2;
         Serial1.print("Decreased Motor Speed. It's now ");
         Serial1.println(MAN_SPEED);
         Serial1.println("Decreased Motor Speed. It's now" + MAN_SPEED);
@@ -84,7 +88,7 @@ void XbeeInputProcessing::processKeyPressMan() {
     }
 }
 
-void XbeeInputProcessing::processKeyPressRun() {
+void XbeeInputProcessing::processKeyPressRun(Xbee &xbee, Motoren &motors) {
     char command = inputString[0];
     // Serial1.println("Manual Control Disabled");
     // Serial1.println(command);
@@ -102,7 +106,7 @@ void XbeeInputProcessing::processKeyPressRun() {
     else if ((command == 'O') || (command == 'o')) {
         automationRunning = false;
         Serial1.println("Program stopped");
-        motor.Stop();
+        motors.Stop();
     }
     else if ((command == 'H') || (command == 'h')) {
         printHelp();

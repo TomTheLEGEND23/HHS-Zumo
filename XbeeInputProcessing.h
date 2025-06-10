@@ -2,13 +2,15 @@
 #define XBEEINPUTPROCESSING_H
 
 #include <Arduino.h>
+#include "XBee.h"
+#include "Motor.h"
 
 class XbeeInputProcessing {
 public:
     XbeeInputProcessing();
-    void processKeyPressRun();
-    void processKeyPressMan();
-    void processKeyInput(char ReChar);
+    void processKeyPressRun(Xbee &xbee, Motoren &motors);
+    void processKeyPressMan(Xbee &xbee, Motoren &motors);
+    void processKeyInput(char ReChar, Xbee &xbee, Motoren &motors);
     void printHelp();
 
 private:

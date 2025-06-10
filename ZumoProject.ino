@@ -25,34 +25,34 @@ void setup() {
 }
 
 void loop() {
-  // xbee.update();
-  // Start calibration
-  // if (xbee.isButtonPressed('c')) {
-  //   imu.init();
-  //   linesensor.calibrateLineSensor(xbee, motor);
-  // };
-  if (lineSensorCalibration) {
+  xbee.update();
+  Start calibration
+  if (xbee.isButtonPressed('c')) {
     imu.init();
     linesensor.calibrateLineSensor(xbee, motor);
-    lineSensorCalibration = false;
   };
+  // if (lineSensorCalibration) {
+  //   imu.init();
+  //   linesensor.calibrateLineSensor(xbee, motor);
+  //   lineSensorCalibration = false;
+  // };
 
-  // Start line following
-  // if (xbee.isButtonPressed('p')) {
-  //   Serial1.println("Program running");
-  //   automationRunning = true;
-  // }
+  Start line following
+  if (xbee.isButtonPressed('p')) {
+    Serial1.println("Program running");
+    automationRunning = true;
+  }
 
-  // // Stop line following
-  // if (xbee.isButtonPressed('o')) {
-  //   Serial1.println("Program stopped");
-  //   automationRunning = false;
-  //   motor.Stop();
-  // }
-  if (Serial1.available()) {
-    ReChar = xbee.readS1();
-    xbeeinputprocessing.processKeyInput(ReChar);
-  };
+  // Stop line following
+  if (xbee.isButtonPressed('o')) {
+    Serial1.println("Program stopped");
+    automationRunning = false;
+    motor.Stop();
+  }
+  // if (Serial1.available()) {
+  //   ReChar = xbee.readS1();
+  //   xbeeinputprocessing.processKeyInput(ReChar, xbee, motor);
+  // };
   // Line following logic
   if (automationRunning) {
     int linePos = linesensor.detectedLine();
