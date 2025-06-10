@@ -31,7 +31,7 @@ void PrintInfo::printDiagnostic() {
         Serial1.println(automationRunning ? "Yes" : "No");
         Serial1.print("Input Buffer: ");
         Serial1.println(xbee.getLastChar());
-        Serial1.println("Linesensor Value: ");
-        Serial1.println(linesensor.detectedLine());
+        Serial1.print("Linesensor Value: ");
+        Serial1.println(linesensor.giveRawValue(2));
         Serial1.println("--- End Diagnostics ---");
 }
