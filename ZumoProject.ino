@@ -10,17 +10,14 @@ Motoren motor;
 LineSensor linesensor;
 ProximitySensors proximitysensor;
 Xbee xbee;
-XbeeInputProcessing xbeeinputprocessing;
 PrintInfo printinfo;
 
 bool automationRunning = false;
-bool lineSensorCalibration = false;
-char ReChar;
 
 // Control parameters
 #define BASE_SPEED 400     // Adjust depending on your robot's motor power
 #define MAX_SPEED 400
-#define KP 1.0            // Proportional gain
+#define KP 0.9            // Proportional gain
 
 void setup() {
 }
@@ -32,15 +29,6 @@ void loop() {
     imu.init();
     linesensor.calibrateLineSensor(xbee, motor);
   };
-  // if (lineSensorCalibration) {
-  //   imu.init();
-  //   linesensor.calibrateLineSensor(xbee, motor);
-  //   lineSensorCalibration = false;
-  // };
-  // if (Serial1.available()) {
-  //   ReChar = xbee.readS1();
-  //   xbeeinputprocessing.processKeyInput(ReChar, xbee, motor);
-  // };
 
   // Start line following
   if (xbee.isButtonPressed('p')) {
