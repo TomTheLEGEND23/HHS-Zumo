@@ -4,6 +4,7 @@
 #include "LineSensor.h"
 #include "ProximitySensors.h"
 #include "XbeeInputProcessing.h"
+#include "PrintInfo.h"
 
 IMU imu;
 Motoren motor;
@@ -11,6 +12,7 @@ LineSensor linesensor;
 ProximitySensors proximitysensor;
 Xbee xbee;
 XbeeInputProcessing xbeeinputprocessing;
+PrintInfo printinfo;
 
 bool automationRunning = false;
 bool lineSensorCalibration = false;
@@ -26,7 +28,7 @@ void setup() {
 
 void loop() {
   xbee.update();
-  Start calibration
+  // Start calibration
   if (xbee.isButtonPressed('c')) {
     imu.init();
     linesensor.calibrateLineSensor(xbee, motor);
@@ -36,23 +38,47 @@ void loop() {
   //   linesensor.calibrateLineSensor(xbee, motor);
   //   lineSensorCalibration = false;
   // };
+  // if (Serial1.available()) {
+  //   ReChar = xbee.readS1();
+  //   xbeeinputprocessing.processKeyInput(ReChar, xbee, motor);
+  // };
 
-  Start line following
+  // Start line following
   if (xbee.isButtonPressed('p')) {
     Serial1.println("Program running");
     automationRunning = true;
   }
-
   // Stop line following
   if (xbee.isButtonPressed('o')) {
     Serial1.println("Program stopped");
     automationRunning = false;
     motor.Stop();
   }
-  // if (Serial1.available()) {
-  //   ReChar = xbee.readS1();
-  //   xbeeinputprocessing.processKeyInput(ReChar, xbee, motor);
-  // };
+  if (xbee.isButtonPressed('w') && !automationRunning) {
+        motor.SetSpeed(BASE_SPEED);
+        motor.Beweeg();
+  }
+  if (xbee.isButtonPressed('s') && !automationRunning) {
+        motor.SetSpeed(-BASE_SPEED);
+        motor.Beweeg();
+  }
+  if (xbee.isButtonPressed('a') && !automationRunning) {
+        motor.turn(-BASE_SPEED, BASE_SPEED);
+  }
+  if (xbee.isButtonPressed('d') && !automationRunning) {
+        motor.turn(BASE_SPEED, -BASE_SPEED);
+  }
+  if (xbee.isButtonPressed(' ')) {
+    automationRunning = false;
+    motor.Stop();
+  }
+  if (xbee.isButtonPressed('h')) {
+    printinfo.printHelp();
+  }
+  if (xbee.isButtonPressed('x')) {
+    printinfo.printDiagnostic();
+  }
+
   // Line following logic
   if (automationRunning) {
     int linePos = linesensor.detectedLine();
