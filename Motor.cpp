@@ -17,14 +17,14 @@ void Motoren::turn(int l, int r) {
 
 void Motoren::rotateLeft90() {
   turn(-250, 250);
-  int rotation = GetEncoderRight() + 400;
+  int rotation = GetEncoderRight() + 350;
   while (rotation > GetEncoderRight()) {}
   Stop();
 }
 
 void Motoren::rotateRight90() {
   turn(250, -250);
-  int rotation = GetEncoderLeft() + 400;
+  int rotation = GetEncoderLeft() + 350;
   while (rotation > GetEncoderLeft()) {}
   Stop();
 }

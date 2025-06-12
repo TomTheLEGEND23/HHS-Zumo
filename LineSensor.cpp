@@ -19,14 +19,14 @@ void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   unsigned int sensorValues[5];
 
   Serial1.println("Capturing minimum sensor values...");
-  for (int i = 0; i < 100; i++) { // take 100 readings to find minimums
-    zumoLineSensor.read(sensorValues); // read current sensor values
+  for (int i = 0; i < 100; i++) {       // take 100 readings to find minimums
+    zumoLineSensor.read(sensorValues);  // read current sensor values
     for (int j = 0; j < 5; j++) {
       if (sensorValues[j] < MinimumDetection[j]) {
         MinimumDetection[j] = sensorValues[j];
       }
     }
-    delay(10); // small delay to stabilize readings
+    delay(10);  // small delay to stabilize readings
   }
 
   Serial1.println("Minimum values per sensor:");
@@ -38,9 +38,21 @@ void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   }
 }
 
+void LineSensor::updateSensors(int calValues[5]) {
+  zumoLineSensor.read(linesensorRawValue);
+  int val = linesensorRawValue[0] - MinimumDetection[0];
+  calValues[0] = val;
+  val = linesensorRawValue[1] - MinimumDetection[1];
+  calValues[1] = val;
+  val = linesensorRawValue[2] - MinimumDetection[2];
+  calValues[2] = val;
+  val = linesensorRawValue[3] - MinimumDetection[3];
+  calValues[3] = val;
+  val = linesensorRawValue[4] - MinimumDetection[4];
+  calValues[4] = val;
+}
 
 int LineSensor::giveRawValue(int l) {
-  zumoLineSensor.read(linesensorRawValue);
   return linesensorRawValue[l];
 }
 
@@ -50,15 +62,14 @@ int LineSensor::giveCalValue(int l) {
 }
 
 int LineSensor::detectedLine() {
-  zumoLineSensor.read(linesensorRawValue);
 
   int adjustedValues[5];
   int total = 0;
   long weightedSum = 0;
 
-  const int positionMap[5] = {0, 1000, 2000, 3000, 4000};
+  const int positionMap[5] = { 0, 1000, 2000, 3000, 4000 };
 
-  for (int i = 0; i < 5; i++) {
+  for (int i = 1; i < 4; i++) {
     adjustedValues[i] = linesensorRawValue[i] - MinimumDetection[i];
     if (adjustedValues[i] < 0) adjustedValues[i] = 0;
 
@@ -66,10 +77,9 @@ int LineSensor::detectedLine() {
     weightedSum += (long)adjustedValues[i] * positionMap[i];
   }
 
-  if (total < 150) { // total adjusted signal too low
+  if (total < 150) {  // total adjusted signal too low
     return -1;
   }
 
   return weightedSum / total;
 }
-
