@@ -6,7 +6,7 @@ LineSensor::LineSensor() {
 }
 
 void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
-  Serial1.println("Starting calibration: spin robot slowly over the line.");
+  Serial1.println("Starting calibration.");
 
   // Wait for 'c' button press to start
   Serial1.println("Press 'c' to start calibration...");
@@ -66,7 +66,7 @@ int LineSensor::detectedLine() {
     weightedSum += (long)adjustedValues[i] * positionMap[i];
   }
 
-  if (total < 100) { // total adjusted signal too low
+  if (total < 150) { // total adjusted signal too low
     return -1;
   }
 
