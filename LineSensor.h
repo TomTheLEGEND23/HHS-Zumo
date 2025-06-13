@@ -19,7 +19,6 @@ public:
 private:
     unsigned int linesensorRawValue[5];
     unsigned int MinimumDetection[5] {1023, 1023, 1023, 1023, 1023}; // initialize to max value
-    unsigned int MinimumDetection[5] {1023, 1023, 1023, 1023, 1023}; // initialize to max value
     Zumo32U4LineSensors zumoLineSensor;
 };
 
