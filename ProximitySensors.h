@@ -10,4 +10,7 @@ public:
     ProximitySensors();
     bool objectDetectedFront();
     void printReadings();
+    int countsFrontAvg();
+    int countsFrontRight();
+    int countsFrontLeft();
 };

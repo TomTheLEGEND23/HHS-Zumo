@@ -3,12 +3,11 @@
 #include "Motor.h"
 #include "LineSensor.h"
 #include "ProximitySensors.h"
-#include "PrintInfo.h"
 
 IMU imu;
 Motoren motor;
 LineSensor linesensor;
-ProximitySensors proximitysensor;
+ProximitySensors proxsensor;
 Xbee xbee;
 PrintInfo printinfo;
 
@@ -42,18 +41,18 @@ void loop() {
     motor.Stop();
   }
   if (xbee.isButtonPressed('w') && !automationRunning) {
-        motor.SetSpeed(BASE_SPEED);
-        motor.Beweeg();
+    motor.SetSpeed(BASE_SPEED);
+    motor.Beweeg();
   }
   if (xbee.isButtonPressed('s') && !automationRunning) {
-        motor.SetSpeed(-BASE_SPEED);
-        motor.Beweeg();
+    motor.SetSpeed(-BASE_SPEED);
+    motor.Beweeg();
   }
   if (xbee.isButtonPressed('a') && !automationRunning) {
-        motor.turn(-BASE_SPEED, BASE_SPEED);
+    motor.turn(-BASE_SPEED, BASE_SPEED);
   }
   if (xbee.isButtonPressed('d') && !automationRunning) {
-        motor.turn(BASE_SPEED, -BASE_SPEED);
+    motor.turn(BASE_SPEED, -BASE_SPEED);
   }
   if (xbee.isButtonPressed(' ') || xbee.isButtonPressed('0')) {
     Serial1.println("Program stopped");
@@ -69,31 +68,25 @@ void loop() {
 
   // Line following logic
   if (automationRunning) {
-    int linePos = linesensor.detectedLine();
-
-    if (linePos == -1) {
-      // No line detected — move forward at half speed
+    int distanceToTravel = motor.getDistanceTraveled() + 20;
+    motor.SetSpeed(BASE_SPEED);
+    motor.Beweeg();
+    while (distanceToTravel > motor.getDistanceTraveled()) {};
+    motor.Stop();
+    while ((proxsensor.countsFrontLeft() <= 4) && (proxsensor.countsFrontRight() <= 4)) {
+      Serial1.println("Turning");
+      motor.turn(350, -350);
+      delay(50);
+      motor.Stop();
+    };
+    Serial1.println("Object found");
+    if ((proxsensor.countsFrontLeft() >= 3) && (proxsensor.countsFrontRight() >= 3) && proxsensor.countsFrontLeft() == proxsensor.countsFrontRight()) {
+      Serial1.println("Object locked on");
       motor.SetSpeed(BASE_SPEED/2);
       motor.Beweeg();
-      return;
-    };
-
-    // Calculate error from center (2000)
-    int error = linePos - 2000;
-
-    // Proportional correction
-    int correction = KP * error;
-
-    // Compute motor speeds
-    int leftSpeed = BASE_SPEED + correction;
-    int rightSpeed = BASE_SPEED - correction;
-
-    // Constrain speeds
-    leftSpeed = constrain(leftSpeed, -MAX_SPEED, MAX_SPEED);
-    rightSpeed = constrain(rightSpeed, -MAX_SPEED, MAX_SPEED);
-
-    // Drive using your Motoren class
-    motor.turn(leftSpeed, rightSpeed);
-    // Serial1.println(linesensor.detectedLine());
+      if (xbee.isButtonPressed("o")) {
+        motor.Stop();
+      };
+    }
   }
 }

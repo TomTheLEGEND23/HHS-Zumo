@@ -13,6 +13,7 @@ public:
   int GetSpeed();
   int GetEncoderLeft();
   int GetEncoderRight();
+  int getDistanceTraveled();
 
 private:
   Zumo32U4Motors Motor;

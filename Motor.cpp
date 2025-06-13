@@ -38,3 +38,10 @@ int Motoren::GetEncoderRight() {
 int Motoren::GetEncoderLeft() {
   return encodertje.getCountsLeft();
 }
+
+int Motoren::getDistanceTraveled() {
+  int leftCount = abs(Motoren::GetEncoderLeft());
+  int rightCount = abs(Motoren::GetEncoderRight());
+  int avgCount = (leftCount + rightCount) / 2;
+  return avgCount / 75.81;
+}

@@ -13,12 +13,32 @@ bool ProximitySensors::objectDetectedFront() {
 void ProximitySensors::printReadings() {
     zumoProxSensors.read();
     
-    Serial.print("\tF: ");
-    Serial.print(zumoProxSensors.countsFrontWithLeftLeds());
-    Serial.print("/");
-    Serial.print(zumoProxSensors.countsFrontWithRightLeds());
+    Serial1.print("\tF: ");
+    Serial1.print(zumoProxSensors.countsFrontWithLeftLeds());
+    Serial1.print("/");
+    Serial1.print(zumoProxSensors.countsFrontWithRightLeds());
     
-    Serial.print(" F:");
-    Serial.print(objectDetectedFront() ? "Y" : "N");
-    Serial.println("");
+    Serial1.print(" F:");
+    Serial1.print(objectDetectedFront() ? "Y" : "N");
+    Serial1.println("");
+}
+
+int ProximitySensors::countsFrontAvg() {
+    zumoProxSensors.read();
+    int FL = zumoProxSensors.countsFrontWithLeftLeds();
+    int FR = zumoProxSensors.countsFrontWithRightLeds();
+    int avg = (FL + FR)/2;
+    return avg;
+}
+
+int ProximitySensors::countsFrontLeft() {
+    zumoProxSensors.read();
+    int FL = zumoProxSensors.countsFrontWithLeftLeds();
+    return FL;
+}
+
+int ProximitySensors::countsFrontRight() {
+    zumoProxSensors.read();
+    int FR = zumoProxSensors.countsFrontWithRightLeds();
+    return FR;
 }
