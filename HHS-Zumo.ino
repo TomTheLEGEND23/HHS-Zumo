@@ -12,7 +12,7 @@ Motoren motor; // Use your Motor class instead of Zumo32U4 objects
 
 //Variables:
 #define BASE_SPEED 200
-#define Balance_SPEED 50
+#define Balance_SPEED 120
 #define MAX_SPEED 400
 
 void setup() {
@@ -48,14 +48,14 @@ void loop() {
   // Check orientation based on pitch
   if (imu.pitch() > 0.03) {
     Serial1.println("Facing DOWN");
-    motor.driveDistance(-2.0, Balance_SPEED);
+    motor.driveDistance(-1.5, Balance_SPEED);
   } else if (imu.pitch() < -0.03) {
     Serial1.println("Facing UP");
-    motor.driveDistance(2.0, Balance_SPEED);
+    motor.driveDistance(1.5, Balance_SPEED);
   } else {
     Serial1.println("Sitting STRAIGHT");
   }
   Serial1.println("------------");
   
-  delay(500); // Delay for readability
+  delay(400); // Delay for readability
 }

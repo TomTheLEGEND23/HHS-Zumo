@@ -61,13 +61,19 @@ void Motoren::driveDistance(float distanceMM, int speed) {
   // Calculate target counts
   long targetCounts = abs(distanceMM * COUNTS_PER_MM);
   
+  // Ensure minimum speed to overcome static friction
+  int actualSpeed = abs(speed);
+  if (actualSpeed < 80) {
+    actualSpeed = 80; // Minimum speed to ensure movement
+  }
+  
   // Determine direction and set speeds
   if (distanceMM > 0) {
     // Drive forward
-    turn(speed, speed);
+    turn(actualSpeed, actualSpeed);
   } else {
     // Drive backward
-    turn(-speed, -speed);
+    turn(-actualSpeed, -actualSpeed);
   }
   
   // Drive until target distance is reached
