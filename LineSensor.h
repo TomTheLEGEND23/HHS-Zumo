@@ -13,13 +13,11 @@ public:
     LineSensor();
     void calibrateLineSensor(Xbee &xbee, Motoren &motors);
     int detectedLine();
-    int giveRawValue(int);
-    int giveCalValue(int);
-    void updateSensors(int calValues[5]);
+    unsigned int giveRawValue(int index);
 
 private:
+private:
     unsigned int linesensorRawValue[5];
-    unsigned int MinimumDetection[5] {1023, 1023, 1023, 1023, 1023}; // initialize to max value
     Zumo32U4LineSensors zumoLineSensor;
 };
 

@@ -6,7 +6,7 @@ LineSensor::LineSensor() {
 }
 
 void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
-  Serial1.println("Starting calibration.");
+  Serial1.println("Starting calibration: spin robot slowly over the line.");
 
 
   // Wait for 'c' button press to start
@@ -20,71 +20,48 @@ void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   Serial1.println("Waiting for 2.5 seconds");
   delay(2500);
 
-  // Find and store minimum detection values
-  unsigned int sensorValues[5];
+  // Spin robot slowly to sweep sensors over line and background
+  motors.turn(200, -200);  // spin in place
 
-  Serial1.println("Capturing minimum sensor values...");
-  for (int i = 0; i < 100; i++) {       // take 100 readings to find minimums
-    zumoLineSensor.read(sensorValues);  // read current sensor values
-    for (int j = 0; j < 5; j++) {
-      if (sensorValues[j] < MinimumDetection[j]) {
-        MinimumDetection[j] = sensorValues[j];
-      }
-    }
-    delay(10);  // small delay to stabilize readings
-  }
+  unsigned long startTime = millis();
+  while (millis() - startTime < 2000) {  // calibrate for 5 seconds
+    zumoLineSensor.calibrate();
+  };
+  motors.turn(-200, 200);  // spin in place
+  startTime = millis();
+  while (millis() - startTime < 2000) {  // calibrate for 5 seconds
+    zumoLineSensor.calibrate();
+  };
+  motors.Stop();
 
-  Serial1.println("Minimum values per sensor:");
-  for (int i = 0; i < 5; i++) {
-    Serial1.print("Sensor ");
-    Serial1.print(i);
-    Serial1.print(": ");
-    Serial1.println(MinimumDetection[i]);
-  }
+  Serial1.println("Calibration complete!");
 }
 
-void LineSensor::updateSensors(int calValues[5]) {
-  zumoLineSensor.read(linesensorRawValue);
-  int val = linesensorRawValue[0] - MinimumDetection[0];
-  calValues[0] = val;
-  val = linesensorRawValue[1] - MinimumDetection[1];
-  calValues[1] = val;
-  val = linesensorRawValue[2] - MinimumDetection[2];
-  calValues[2] = val;
-  val = linesensorRawValue[3] - MinimumDetection[3];
-  calValues[3] = val;
-  val = linesensorRawValue[4] - MinimumDetection[4];
-  calValues[4] = val;
-}
-
-int LineSensor::giveRawValue(int l) {
+unsigned int LineSensor::giveRawValue(int l) {
+  zumoLineSensor.readCalibrated(linesensorRawValue);
   return linesensorRawValue[l];
 }
 
-int LineSensor::giveCalValue(int l) {
-  int returning = giveRawValue(l) - MinimumDetection[l];
-  return returning;
-}
-
 int LineSensor::detectedLine() {
+  zumoLineSensor.readCalibrated(linesensorRawValue);
 
-  int adjustedValues[5];
-  int total = 0;
-  long weightedSum = 0;
+  unsigned long weightedSum = 0;
+  unsigned int total = 0;
 
-  const int positionMap[5] = { 0, 1000, 2000, 3000, 4000 };
+  // Map sensor indices to position values (0 to 4000)
+  const int positionMap[5] = {0, 1000, 2000, 3000, 4000};
 
-  for (int i = 1; i < 4; i++) {
-    adjustedValues[i] = linesensorRawValue[i] - MinimumDetection[i];
-    if (adjustedValues[i] < 0) adjustedValues[i] = 0;
-
-    total += adjustedValues[i];
-    weightedSum += (long)adjustedValues[i] * positionMap[i];
+  for (int i = 0; i < 5; i++) {
+    int value = linesensorRawValue[i];  // 0 (white) to 1000 (black)
+    weightedSum += (unsigned long)value * positionMap[i];
+    total += value;
   }
 
-  if (total < 150) {  // total adjusted signal too low
+  // If all sensors see white (very low readings), no line is detected
+  if (total < 200) {  // Adjust threshold as needed based on surface
     return -1;
   }
 
-  return weightedSum / total;
+  // Compute average position
+  return weightedSum / total;  // Returns a value between 0 and 4000
 }
