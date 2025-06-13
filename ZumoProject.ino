@@ -12,11 +12,14 @@ Xbee xbee;
 PrintInfo printinfo;
 
 bool automationRunning = false;
+bool onLeftCorner = false;
+bool onRightCorner = false;
 
 // Control parameters
-#define BASE_SPEED 400     // Adjust depending on your robot's motor power
+#define BASE_SPEED 200
 #define MAX_SPEED 400
-#define KP 0.9            // Proportional gain
+
+#define KP 0.5
 
 void setup() {
 }
@@ -65,6 +68,11 @@ void loop() {
   if (xbee.isButtonPressed('x')) {
     printinfo.printDiagnostic();
   }
+
+
+  int sensorValues[5];
+  linesensor.updateSensors(sensorValues);
+  // Serial1.println(sensorValues[0]);
 
   // Line following logic
   if (automationRunning) {

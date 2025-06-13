@@ -49,6 +49,11 @@ int LineSensor::giveCalValue(int l) {
   return returning;
 }
 
+int LineSensor::giveCalValue(int l) {
+  int returning = giveRawValue(l) - MinimumDetection[l];
+  return returning;
+}
+
 int LineSensor::detectedLine() {
   zumoLineSensor.read(linesensorRawValue);
 
@@ -70,6 +75,7 @@ int LineSensor::detectedLine() {
     return -1;
   }
 
+  return weightedSum / total;
   return weightedSum / total;
 }
 
