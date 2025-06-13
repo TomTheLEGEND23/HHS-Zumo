@@ -1,7 +1,7 @@
-#include "XBee.h"
+#include "Xbee.h"
 #include <ctype.h>
 
-Xbee::Xbee() : lastChar(), available(false) {
+Xbee::Xbee() : lastChar('\0'), available(false) {
     Serial1.begin(19200);
 }
 
@@ -16,8 +16,4 @@ void Xbee::update() {
 
 bool Xbee::isButtonPressed(char c) {
     return available && tolower(lastChar) == tolower(c);
-}
-
-char Xbee::getLastChar() {
-    return lastChar;
 }

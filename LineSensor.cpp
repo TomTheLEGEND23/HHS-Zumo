@@ -8,17 +8,12 @@ LineSensor::LineSensor() {
 void LineSensor::calibrateLineSensor(Xbee &xbee, Motoren &motors) {
   Serial1.println("Starting calibration.");
 
-
   // Wait for 'c' button press to start
-//   Serial1.println("Press 'c' to start calibration...");
-//   xbee.update();
-//   while (!xbee.isButtonPressed('c')) {
-//     xbee.update();
-//   };
-
-  // Alternative to the previous waiting for C input
-  Serial1.println("Waiting for 2.5 seconds");
-  delay(2500);
+  Serial1.println("Press 'c' to start calibration...");
+  xbee.update();
+  while (!xbee.isButtonPressed('c')) {
+    xbee.update();
+  }
 
   // Find and store minimum detection values
   unsigned int sensorValues[5];
