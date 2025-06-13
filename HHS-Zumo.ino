@@ -18,9 +18,7 @@ Motoren motor; // Use your Motor class instead of Zumo32U4 objects
 void setup() {
   // Initialize serial communication for debugging
   Serial.begin(19200);
-  while (!Serial) {
-    ; // Wait for serial port to connect. Needed for native USB port only
-  }
+  Serial1.begin(19200);
 }
 
 void loop() {
