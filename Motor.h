@@ -10,8 +10,6 @@ public:
   void turn(int, int);
   void Stop();
   void SetSpeed(int);
-  void rotateLeft90();
-  void rotateRight90();
   int GetSpeed();
   int GetEncoderLeft();
   int GetEncoderRight();
