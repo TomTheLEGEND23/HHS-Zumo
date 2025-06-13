@@ -3,12 +3,14 @@
 #include "Motor.h"
 #include "LineSensor.h"
 #include "ProximitySensors.h"
+#include "PrintInfo.h"
 
 IMU imu;
 Motoren motor;
 LineSensor linesensor;
 ProximitySensors proximitysensor;
 Xbee xbee;
+PrintInfo printinfo;
 
 bool automationRunning = false;
 bool onLeftCorner = false;
@@ -17,6 +19,7 @@ bool onRightCorner = false;
 // Control parameters
 #define BASE_SPEED 200
 #define MAX_SPEED 400
+
 #define KP 0.5
 
 void setup() {
@@ -24,22 +27,47 @@ void setup() {
 
 void loop() {
   xbee.update();
-
   // Start calibration
   if (xbee.isButtonPressed('c')) {
     imu.init();
     linesensor.calibrateLineSensor(xbee, motor);
-  }
+  };
 
   // Start line following
   if (xbee.isButtonPressed('p')) {
+    Serial1.println("Program running");
     automationRunning = true;
   }
-
   // Stop line following
   if (xbee.isButtonPressed('o')) {
+    Serial1.println("Program stopped");
     automationRunning = false;
     motor.Stop();
+  }
+  if (xbee.isButtonPressed('w') && !automationRunning) {
+        motor.SetSpeed(BASE_SPEED);
+        motor.Beweeg();
+  }
+  if (xbee.isButtonPressed('s') && !automationRunning) {
+        motor.SetSpeed(-BASE_SPEED);
+        motor.Beweeg();
+  }
+  if (xbee.isButtonPressed('a') && !automationRunning) {
+        motor.turn(-BASE_SPEED, BASE_SPEED);
+  }
+  if (xbee.isButtonPressed('d') && !automationRunning) {
+        motor.turn(BASE_SPEED, -BASE_SPEED);
+  }
+  if (xbee.isButtonPressed(' ') || xbee.isButtonPressed('0')) {
+    Serial1.println("Program stopped");
+    automationRunning = false;
+    motor.Stop();
+  }
+  if (xbee.isButtonPressed('h')) {
+    printinfo.printHelp();
+  }
+  if (xbee.isButtonPressed('x')) {
+    printinfo.printDiagnostic();
   }
 
 
@@ -89,7 +117,7 @@ void loop() {
       motor.SetSpeed(BASE_SPEED / 2);
       motor.Beweeg();
       return;
-    }
+    };
 
     int movementSpeed = BASE_SPEED;
 
@@ -109,5 +137,6 @@ void loop() {
 
     // Drive using your Motoren class
     motor.turn(leftSpeed, rightSpeed);
+    // Serial1.println(linesensor.detectedLine());
   }
 }
