@@ -15,6 +15,20 @@ void Motoren::turn(int l, int r) {
   Motor.setSpeeds(SpeedL, SpeedR);
 }
 
+void Motoren::rotateLeft90() {
+  turn(-250, 250);
+  int rotation = GetEncoderRight() + 350;
+  while (rotation > GetEncoderRight()) {}
+  Stop();
+}
+
+void Motoren::rotateRight90() {
+  turn(250, -250);
+  int rotation = GetEncoderLeft() + 350;
+  while (rotation > GetEncoderLeft()) {}
+  Stop();
+}
+
 void Motoren::Stop() {
   staticSpeed = 0;
   Motor.setSpeeds(0, 0);
