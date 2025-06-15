@@ -2,7 +2,8 @@
 
 // Constructor for the IMU class.
 // Initializes the IMU with given magnetometer calibration values.
-IMU::IMU():status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0) {
+IMU::IMU()
+  : status(false), accelBiasX(0.0), accelBiasY(0.0), accelBiasZ(0.0), gyroBiasX(0.0), gyroBiasY(0.0), gyroBiasZ(0.0) {
 }
 
 // Initializes the IMU sensor and calculates accelerometer and gyroscope bias.

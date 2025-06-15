@@ -5,13 +5,13 @@
 
 class Xbee {
 public:
-    Xbee();
-    void update();
-    bool isButtonPressed(char c);
+  Xbee();
+  void update();
+  bool isButtonPressed(char c);
 
 private:
-    char lastChar;
-    bool available;
+  char lastChar;
+  bool available;
 };
 
 #endif

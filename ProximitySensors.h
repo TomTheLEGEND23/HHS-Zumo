@@ -3,11 +3,11 @@
 
 class ProximitySensors {
 private:
-    Zumo32U4ProximitySensors zumoProxSensors;
-    int detectionThreshold = 4;
+  Zumo32U4ProximitySensors zumoProxSensors;
+  int detectionThreshold = 4;
 
 public:
-    ProximitySensors();
-    bool objectDetectedFront();
-    void printReadings();
+  ProximitySensors();
+  bool objectDetectedFront();
+  void printReadings();
 };

@@ -1,6 +1,7 @@
 #include "Motor.h"
 
-Motoren::Motoren():status(true), staticSpeed(0) {
+Motoren::Motoren()
+  : status(true), staticSpeed(0) {
 }
 
 void Motoren::Beweeg() {
@@ -17,14 +18,14 @@ void Motoren::turn(int l, int r) {
 
 void Motoren::rotateLeft90() {
   turn(-250, 250);
-  int rotation = GetEncoderRight() + 350;
+  int rotation = GetEncoderRight() + 360;
   while (rotation > GetEncoderRight()) {}
   Stop();
 }
 
 void Motoren::rotateRight90() {
   turn(250, -250);
-  int rotation = GetEncoderLeft() + 350;
+  int rotation = GetEncoderLeft() + 360;
   while (rotation > GetEncoderLeft()) {}
   Stop();
 }

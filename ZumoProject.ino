@@ -3,21 +3,26 @@
 #include "Motor.h"
 #include "LineSensor.h"
 #include "ProximitySensors.h"
+#include "Linefollower.h"
+#include "PushBlock.h"
+#include "WipWap.h"
 
 IMU imu;
 Motoren motor;
 LineSensor linesensor;
 ProximitySensors proximitysensor;
 Xbee xbee;
+LineFollower linefollower;
+PushBlock pushblock;
+WipWap wipwap;
 
 bool automationRunning = false;
-bool onLeftCorner = false;
-bool onRightCorner = false;
+bool pushAutomation = false;
+bool WipAutomation = false;
 
-// Control parameters
-#define BASE_SPEED 200
-#define MAX_SPEED 400
-#define KP 0.5
+const int BASE_SPEED = 180;
+const int MAX_SPEED = 400;
+const float KP = 0.5;
 
 void setup() {
 }
@@ -32,82 +37,37 @@ void loop() {
   }
 
   // Start line following
-  if (xbee.isButtonPressed('p')) {
-    automationRunning = true;
+  if (xbee.isButtonPressed('p')) automationRunning = true;
+
+  if (xbee.isButtonPressed('i')) {
+    pushAutomation = true;
+  }
+
+  if (xbee.isButtonPressed('u')) {
+    WipAutomation = true;
   }
 
   // Stop line following
   if (xbee.isButtonPressed('o')) {
     automationRunning = false;
+    pushAutomation = false;
+    WipAutomation = false;
     motor.Stop();
   }
 
-
-  int sensorValues[5];
-  linesensor.updateSensors(sensorValues);
-  // Serial1.println(sensorValues[0]);
-
-  // Line following logic
   if (automationRunning) {
-
-    // Check left corner
-    if ((sensorValues[0] >= 200 && sensorValues[0] <= 300) || sensorValues[0] >= 700) {
-      if (sensorValues[4] < 70) {
-        onLeftCorner = true;
-      }
+    linefollower.FollowLine(motor, linesensor, BASE_SPEED, MAX_SPEED, KP);
+  }
+  if (pushAutomation) {
+    pushblock.pushBlock(300);
+    if (pushblock.completedPushing()) pushAutomation = false;
+  }
+  if (WipAutomation) {
+    wipwap.Wippen();
+    if (wipwap.completedWippen()) {
+      WipAutomation = false;
+      automationRunning = true;
+      Serial1.println("EndedWipWap");
     }
-    if (onLeftCorner) {
-      if (sensorValues[0] < 70) {
-        motor.rotateLeft90();
-        onLeftCorner = false;
-      } else if (sensorValues[0] > 300 && sensorValues[0] < 700) {
-        // Exit if gray
-        onLeftCorner = false;
-      }
-    }
-
-    // Check right corner
-    if ((sensorValues[4] >= 200 && sensorValues[4] <= 300) || sensorValues[4] >= 700) {
-      if (sensorValues[0] < 70) {
-        onRightCorner = true;
-      }
-    }
-    if (onRightCorner) {
-      if (sensorValues[4] < 70) {
-        motor.rotateRight90();
-        onRightCorner = false;
-      } else if (sensorValues[4] > 300 && sensorValues[4] < 700) {
-        // Exit if gray
-        onRightCorner = false;
-      }
-    }
-
-    int linePos = linesensor.detectedLine();
-
-    if (linePos == -1) {
-      // No line detected — move forward at half speed
-      motor.SetSpeed(BASE_SPEED / 2);
-      motor.Beweeg();
-      return;
-    }
-
-    int movementSpeed = BASE_SPEED;
-
-    // Calculate error from center (2000)
-    int error = linePos - 2000;
-
-    // Proportional correction
-    int correction = KP * error;
-
-    // Compute motor speeds
-    int leftSpeed = movementSpeed + correction;
-    int rightSpeed = movementSpeed - correction;
-
-    // Constrain speeds
-    leftSpeed = constrain(leftSpeed, -MAX_SPEED, MAX_SPEED);
-    rightSpeed = constrain(rightSpeed, -MAX_SPEED, MAX_SPEED);
-
-    // Drive using your Motoren class
-    motor.turn(leftSpeed, rightSpeed);
   }
 }

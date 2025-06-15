@@ -61,7 +61,7 @@ int LineSensor::giveCalValue(int l) {
   return returning;
 }
 
-int LineSensor::detectedLine() {
+int LineSensor::detectedLine(int l, int r) {
 
   int adjustedValues[5];
   int total = 0;
@@ -69,7 +69,7 @@ int LineSensor::detectedLine() {
 
   const int positionMap[5] = { 0, 1000, 2000, 3000, 4000 };
 
-  for (int i = 1; i < 4; i++) {
+  for (int i = l; i < r; i++) {
     adjustedValues[i] = linesensorRawValue[i] - MinimumDetection[i];
     if (adjustedValues[i] < 0) adjustedValues[i] = 0;
 
@@ -77,7 +77,7 @@ int LineSensor::detectedLine() {
     weightedSum += (long)adjustedValues[i] * positionMap[i];
   }
 
-  if (total < 150) {  // total adjusted signal too low
+  if (total < 200) {  // total adjusted signal too low
     return -1;
   }
 

@@ -7,20 +7,19 @@
 #include "XBee.h"
 #include "Motor.h"
 
-class LineSensor
-{
+class LineSensor {
 public:
-    LineSensor();
-    void calibrateLineSensor(Xbee &xbee, Motoren &motors);
-    int detectedLine();
-    int giveRawValue(int);
-    int giveCalValue(int);
-    void updateSensors(int calValues[5]);
+  LineSensor();
+  void calibrateLineSensor(Xbee &xbee, Motoren &motors);
+  int detectedLine(int, int);
+  int giveRawValue(int);
+  int giveCalValue(int);
+  void updateSensors(int calValues[5]);
 
 private:
-    unsigned int linesensorRawValue[5];
-    unsigned int MinimumDetection[5] {1023, 1023, 1023, 1023, 1023}; // initialize to max value
-    Zumo32U4LineSensors zumoLineSensor;
+  unsigned int linesensorRawValue[5];
+  unsigned int MinimumDetection[5]{ 1023, 1023, 1023, 1023, 1023 };  // initialize to max value
+  Zumo32U4LineSensors zumoLineSensor;
 };
 
 #endif
