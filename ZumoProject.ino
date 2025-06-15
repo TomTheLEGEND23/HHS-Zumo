@@ -4,6 +4,7 @@
 #include "LineSensor.h"
 #include "ProximitySensors.h"
 #include "PrintInfo.h"
+#include "PushBlock.h"
 
 IMU imu;
 Motoren motor;
@@ -11,8 +12,8 @@ LineSensor linesensor;
 ProximitySensors proxsensor;
 Xbee xbee;
 PrintInfo printinfo;
+PushBlock pushblock;
 
-bool automationRunning = false;
 bool onLeftCorner = false;
 bool onRightCorner = false;
 
@@ -40,30 +41,30 @@ void loop()
   if (xbee.isButtonPressed('p'))
   {
     Serial1.println("Program running");
-    automationRunning = true;
+    pushblock.pushBlock(BASE_SPEED);
   }
   // Stop line following
   if (xbee.isButtonPressed('o'))
   {
     Serial1.println("Program stopped");
-    automationRunning = false;
+    pushblock.automationRunning = false;
     motor.Stop();
   }
-  if (xbee.isButtonPressed('w') && !automationRunning)
+  if (xbee.isButtonPressed('w') && !pushblock.automationRunning)
   {
     motor.SetSpeed(BASE_SPEED);
     motor.Beweeg();
   }
-  if (xbee.isButtonPressed('s') && !automationRunning)
+  if (xbee.isButtonPressed('s') && !pushblock.automationRunning)
   {
     motor.SetSpeed(-BASE_SPEED);
     motor.Beweeg();
   }
-  if (xbee.isButtonPressed('a') && !automationRunning)
+  if (xbee.isButtonPressed('a') && !pushblock.automationRunning)
   {
     motor.turn(-BASE_SPEED, BASE_SPEED);
   }
-  if (xbee.isButtonPressed('d') && !automationRunning)
+  if (xbee.isButtonPressed('d') && !pushblock.automationRunning)
   {
     motor.turn(BASE_SPEED, -BASE_SPEED);
   }
@@ -71,7 +72,7 @@ void loop()
   {
     // Serial1.println("Program stopped");
     motor.Stop();
-    // automationRunning = false;
+    pushblock.automationRunning = false;
   }
   if (xbee.isButtonPressed('h'))
   {
@@ -80,80 +81,6 @@ void loop()
   if (xbee.isButtonPressed('x'))
   {
     printinfo.printDiagnostic();
-  }
-
-  // Push Block logic
-  static bool pushBlockInitDone = false;
-  static bool notOverCircle = true;
-  if (automationRunning)
-  {
-    if (!pushBlockInitDone) {
-      int distanceToTravel = motor.getDistanceTraveled() + 20;
-      motor.SetSpeed(BASE_SPEED);
-      motor.Beweeg();
-      while (distanceToTravel > motor.getDistanceTraveled())
-      {
-      };
-      motor.Stop();
-      pushBlockInitDone = true;
-    }
-    motor.rotateLeft90();
-    motor.rotateLeft90();
-    automationRunning = false;
-    while (((proxsensor.countsFrontLeft() <= 4) || (proxsensor.countsFrontRight() <= 4))) {
-      Serial1.println("Turning");
-      motor.turn(350, -350);
-      delay(50);
-      motor.Stop();
-    };
-    Serial1.println("Object found");
-    proxsensor.printReadings();
-    while (((proxsensor.countsFrontLeft() >= 3) || (proxsensor.countsFrontRight() >= 3)))
-    {
-      Serial1.println("Turning");
-      motor.turn(350, -350);
-      delay(30);
-      motor.Stop();
-      if (xbee.isButtonPressed('o'))
-      {
-        Serial1.println("Program stopped");
-        motor.Stop();
-        automationRunning = false;
-      }
-      
-      while (((proxsensor.countsFrontLeft() >= 3) && (proxsensor.countsFrontRight() >= 3)))
-      {
-        Serial1.println("Object locked on");
-        Serial1.print("Object Distance");
-        proxsensor.printReadings();
-        motor.SetSpeed(BASE_SPEED);
-        motor.Beweeg();
-        while (notOverCircle)
-        {
-          if (!(linesensor.detectedLine() == -1)) {
-            notOverCircle = false;
-            automationRunning = false;
-            Serial1.println("line detected");
-            motor.Stop();
-          }
-          // while (!((linesensor.giveCalValue(2) >= 700) || (linesensor.giveCalValue(0) >= 700) || (linesensor.giveCalValue(4) >= 700) )) {};
-          // Serial1.println("line detected");
-          // motor.Stop();
-          // notOverCircle = false;
-          // automationRunning = false;
-        }
-        if (xbee.isButtonPressed('o'))
-        {
-          Serial1.println("Program stopped");
-          motor.Stop();
-          automationRunning = false;
-        }
-      };
-    }
-  }
-  else
-  {
-    pushBlockInitDone = false;
   }
 
   if (xbee.isButtonPressed('n'))

@@ -2,9 +2,10 @@
 #include "XBee.h"
 #include "Motor.h"
 #include "LineSensor.h"
+#include "PushBlock.h"
 
 // extern BASE_SPEED;
-extern bool automationRunning;
+extern PushBlock pushblock;
 extern LineSensor linesensor;
 extern Xbee xbee;
 
@@ -28,7 +29,7 @@ void PrintInfo::printHelp() {
 void PrintInfo::printDiagnostic() {
         Serial1.println("--- Zumo Diagnostics ---");
         Serial1.print("Program Running: ");
-        Serial1.println(automationRunning ? "Yes" : "No");
+        Serial1.println(pushblock.automationRunning ? "Yes" : "No");
         Serial1.print("Input Buffer: ");
         Serial1.println(xbee.getLastChar());
         Serial1.print("Linesensor Value: ");
