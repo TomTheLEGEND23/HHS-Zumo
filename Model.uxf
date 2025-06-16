@@ -1,15 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="15.1">
-  <zoom_level>7</zoom_level>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>847</x>
-      <y>364</y>
-      <w>308</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>LineSensor
+<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><element><id>UMLClass</id><coordinates><x>665</x><y>350</y><w>308</w><h>140</h></coordinates><panel_attributes>LineSensor
 --
 linesensorRawValue[5] : unsigned int
 MinimumDetection[5]{1023, 1023, 1023, 1023, 1023 } : unsigned int
@@ -21,18 +10,7 @@ detectedLine(int, int) : int
 giveRawValue(int) : int
 int giveCalValue(int) : int
 updateSensors(int calValues[5]) : void
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>567</x>
-      <y>98</y>
-      <w>413</w>
-      <h>189</h>
-    </coordinates>
-    <panel_attributes>LineFollower
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>385</x><y>84</y><w>413</w><h>189</h></coordinates><panel_attributes>LineFollower
 --
 onLeftCorner : bool
 onRightCorner : bool
@@ -48,18 +26,7 @@ leftPeak : int
 rightPeak : int
 --
 LineFollower();
-FollowLine(Motoren &amp;motor, LineSensor &amp;linesensor, const int, const int, const float) : void</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>539</x>
-      <y>378</y>
-      <w>147</w>
-      <h>210</h>
-    </coordinates>
-    <panel_attributes>Motor
+FollowLine(Motoren &amp;motor, LineSensor &amp;linesensor, const int, const int, const float) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>357</x><y>364</y><w>147</w><h>210</h></coordinates><panel_attributes>Motor
 --
 Zumo32U4Motors Motor
 Zumo32U4Encoders encodertje
@@ -77,18 +44,7 @@ rotateLeft90() : void
 rotateRight90() : void
 GetSpeed() : int
 GetEncoderLeft() : int
-GetEncoderRight() : int</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>987</x>
-      <y>567</y>
-      <w>147</w>
-      <h>238</h>
-    </coordinates>
-    <panel_attributes>IMU
+GetEncoderRight() : int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>679</y><w>147</w><h>238</h></coordinates><panel_attributes>IMU
 --
 Zumo32U4IMU imu
 status : bool
@@ -110,36 +66,14 @@ gyroZ() : float
 fetchStatus() : bool
 pitch() : float
 roll() : float
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>189</x>
-      <y>154</y>
-      <w>147</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>ProximitySensor
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>7</x><y>140</y><w>147</w><h>91</h></coordinates><panel_attributes>ProximitySensor
 --
 Zumo32U4ProximitySensors zumoProxSensors;
 detectionThreshold : int
 --
 ProximitySensors()
 objectDetectedFront() : bool
-printReadings() : void</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>182</x>
-      <y>336</y>
-      <w>189</w>
-      <h>210</h>
-    </coordinates>
-    <panel_attributes>PushBlock
+printReadings() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>322</y><w>189</w><h>210</h></coordinates><panel_attributes>PushBlock
 --
 distance : int
 initial : bool
@@ -153,155 +87,20 @@ toggleThreshold : static const int
 --
 PushBlock()
 pushBlock(int) : void
-completedPushing() : bool</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>756</x>
-      <y>609</y>
-      <w>133</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>WipWap
+completedPushing() : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>462</x><y>721</y><w>133</w><h>91</h></coordinates><panel_attributes>WipWap
 --
 completed : bool
 distance : int
 --
 WipWap()
 Wippen() : void
-completedWippen() : bool</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1246</x>
-      <y>371</y>
-      <w>147</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>Xbee
+completedWippen() : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1064</x><y>357</y><w>147</w><h>91</h></coordinates><panel_attributes>Xbee
 --
 lastChar : char
 available : bool
 --
 Xbee();
 update() : void
-isButtonPressed(char c) : bool</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1148</x>
-      <y>413</y>
-      <w>112</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>658</x>
-      <y>280</y>
-      <w>21</w>
-      <h>112</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>364</x>
-      <y>420</y>
-      <w>189</w>
-      <h>28</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>250.0;20.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>679</x>
-      <y>581</y>
-      <w>133</w>
-      <h>42</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;170.0;40.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>882</x>
-      <y>637</y>
-      <w>119</w>
-      <h>21</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>266</x>
-      <y>238</y>
-      <w>21</w>
-      <h>112</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>364</x>
-      <y>343</y>
-      <w>497</w>
-      <h>42</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>690.0;40.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>903</x>
-      <y>280</y>
-      <w>21</w>
-      <h>98</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1134</x>
-      <y>238</y>
-      <w>147</w>
-      <h>42</h>
-    </coordinates>
-    <panel_attributes>Main ino
+isButtonPressed(char c) : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>966</x><y>399</y><w>112</w><h>21</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>140;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>476</x><y>266</y><w>21</w><h>112</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;140;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>182</x><y>406</y><w>189</w><h>28</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>250;20;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>497</x><y>567</y><w>21</w><h>168</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;10;220</additional_attributes></element><element><id>Relation</id><coordinates><x>588</x><y>749</y><w>119</w><h>21</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>150;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>84</x><y>224</y><w>21</w><h>112</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>721</x><y>266</y><w>21</w><h>98</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;120;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>525</x><y>616</y><w>147</w><h>42</h></coordinates><panel_attributes>Main ino
 --
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1225</x>
-      <y>273</y>
-      <w>56</w>
-      <h>112</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>60.0;140.0;10.0;10.0</additional_attributes>
-  </element>
-</diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>665</x><y>441</y><w>476</w><h>210</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>660;10;10;280</additional_attributes></element><element><id>Relation</id><coordinates><x>518</x><y>651</y><w>98</w><h>84</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;100;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>84</x><y>525</y><w>455</w><h>126</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;630;160</additional_attributes></element><element><id>Relation</id><coordinates><x>588</x><y>266</y><w>35</w><h>364</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;30;500</additional_attributes></element></diagram>
