@@ -1,0 +1,106 @@
+<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><element><id>UMLClass</id><coordinates><x>665</x><y>350</y><w>308</w><h>140</h></coordinates><panel_attributes>LineSensor
+--
+linesensorRawValue[5] : unsigned int
+MinimumDetection[5]{1023, 1023, 1023, 1023, 1023 } : unsigned int
+Zumo32U4LineSensors zumoLineSensor
+--
+LineSensor()
+calibrateLineSensor(Xbee &amp;xbee, Motoren &amp;motors) : void
+detectedLine(int, int) : int
+giveRawValue(int) : int
+int giveCalValue(int) : int
+updateSensors(int calValues[5]) : void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>385</x><y>84</y><w>413</w><h>189</h></coordinates><panel_attributes>LineFollower
+--
+onLeftCorner : bool
+onRightCorner : bool
+previousLeftValue : int
+previousRightValue : int
+leftRising : bool
+rightRising : bool
+LeftGray : bool
+RightGray : bool
+rightSensor : int
+leftSensor : int
+leftPeak : int
+rightPeak : int
+--
+LineFollower();
+FollowLine(Motoren &amp;motor, LineSensor &amp;linesensor, const int, const int, const float) : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>357</x><y>364</y><w>147</w><h>210</h></coordinates><panel_attributes>Motor
+--
+Zumo32U4Motors Motor
+Zumo32U4Encoders encodertje
+status : bool
+staticSpeed : int
+SpeedL : int
+SpeedR : int
+--
+Motoren()
+Beweeg() : void
+turn(int, int) : void
+Stop() : void
+SetSpeed(int) : void
+rotateLeft90() : void
+rotateRight90() : void
+GetSpeed() : int
+GetEncoderLeft() : int
+GetEncoderRight() : int</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>679</y><w>147</w><h>238</h></coordinates><panel_attributes>IMU
+--
+Zumo32U4IMU imu
+status : bool
+accelBiasX : float
+accelBiasY : float
+accelBiasZ : float
+gyroBiasX : float
+gyroBiasY : float
+gyroBiasZ : float
+--
+IMU()
+init() : bool
+accelX() : float
+accelY() : float
+accelZ() : float
+gyroX() : float
+gyroY() : float
+gyroZ() : float
+fetchStatus() : bool
+pitch() : float
+roll() : float
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>7</x><y>140</y><w>147</w><h>91</h></coordinates><panel_attributes>ProximitySensor
+--
+Zumo32U4ProximitySensors zumoProxSensors;
+detectionThreshold : int
+--
+ProximitySensors()
+objectDetectedFront() : bool
+printReadings() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>322</y><w>189</w><h>210</h></coordinates><panel_attributes>PushBlock
+--
+distance : int
+initial : bool
+completed : bool
+windowStartTime : unsigned long
+toggleCount : int
+lastReading : bool
+pushingObject : bool
+toggleInterval : static const unsigned long
+toggleThreshold : static const int
+--
+PushBlock()
+pushBlock(int) : void
+completedPushing() : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>462</x><y>721</y><w>133</w><h>91</h></coordinates><panel_attributes>WipWap
+--
+completed : bool
+distance : int
+--
+WipWap()
+Wippen() : void
+completedWippen() : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1064</x><y>357</y><w>147</w><h>91</h></coordinates><panel_attributes>Xbee
+--
+lastChar : char
+available : bool
+--
+Xbee();
+update() : void
+isButtonPressed(char c) : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>966</x><y>399</y><w>112</w><h>21</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>140;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>476</x><y>266</y><w>21</w><h>112</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;140;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>182</x><y>406</y><w>189</w><h>28</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>250;20;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>497</x><y>567</y><w>21</w><h>168</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;10;220</additional_attributes></element><element><id>Relation</id><coordinates><x>588</x><y>749</y><w>119</w><h>21</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>150;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>84</x><y>224</y><w>21</w><h>112</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;10;140</additional_attributes></element><element><id>Relation</id><coordinates><x>721</x><y>266</y><w>21</w><h>98</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;120;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>525</x><y>616</y><w>147</w><h>42</h></coordinates><panel_attributes>Main ino
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>665</x><y>441</y><w>476</w><h>210</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>660;10;10;280</additional_attributes></element><element><id>Relation</id><coordinates><x>518</x><y>651</y><w>98</w><h>84</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;100;120;10</additional_attributes></element><element><id>Relation</id><coordinates><x>84</x><y>525</y><w>455</w><h>126</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;630;160</additional_attributes></element><element><id>Relation</id><coordinates><x>588</x><y>266</y><w>35</w><h>364</h></coordinates><panel_attributes>lt=&lt;-</panel_attributes><additional_attributes>10;10;30;500</additional_attributes></element></diagram>
