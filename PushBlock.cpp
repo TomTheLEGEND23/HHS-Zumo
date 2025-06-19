@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include "PushBlock.h"
 #include "IMU.h"
 #include "XBee.h"
@@ -13,9 +14,6 @@ extern Xbee xbee;
 
 PushBlock::PushBlock()
   : distance(0),
-    windowStartTime(0),
-    toggleCount(0),
-    lastReading(false),
     pushingObject(false),
     initial(false),
     completed(false) {}
@@ -25,19 +23,24 @@ bool PushBlock::completedPushing() {
 }
 
 void PushBlock::pushBlock(int BASE_SPEED) {
+  motor.ResetEncoder();
   int sensorValues[5];
   linesensor.updateSensors(sensorValues);
 
   if (completed) {
-    // Reset state for a new push cycle
+    // Reset state
     initial = false;
     pushingObject = false;
     completed = false;
+    rotatingToFind = true;
+    foundObject = false;
+    rotatedBack = false;
+    readyToPush = false;
   }
 
   if (!initial) {
     Serial1.println("Positioning before push...");
-    distance = motor.GetEncoderLeft() + 1100;
+    distance = motor.GetEncoderLeft() + 1800;
     motor.SetSpeed(BASE_SPEED);
     motor.Beweeg();
     while (distance > motor.GetEncoderLeft()) {}
@@ -45,51 +48,58 @@ void PushBlock::pushBlock(int BASE_SPEED) {
     motor.rotateLeft90();
     motor.rotateLeft90();
 
-    windowStartTime = millis();
-    toggleCount = 0;
-    lastReading = false;
-    pushingObject = false;
     initial = true;
-
     Serial1.println("Push sequence started.");
   }
 
-  if (linesensor.detectedLine(0, 5) == -1) {
-    // No line detected, continue searching/pushing
-    linesensor.updateSensors(sensorValues);
+  linesensor.updateSensors(sensorValues);
 
-    bool currentReading = proximitysensor.objectDetectedFront();
-    unsigned long now = millis();
+  if (sensorValues[0] <= 150 || sensorValues[1] <= 150 || sensorValues[2] <= 150 ||
+      sensorValues[3] <= 150 || sensorValues[4] <= 150) {
 
-    if (!pushingObject && initial) {
-      if (currentReading != lastReading) {
-        toggleCount++;
-      }
+    bool objectDetected = proximitysensor.objectDetectedFront();
 
-      if (now - windowStartTime >= toggleInterval) {
-        if (toggleCount >= toggleThreshold) {
-          pushingObject = true;
-          Serial1.println("Object detected. Pushing...");
-        }
-        windowStartTime = now;
-        toggleCount = 0;
-      }
-
-      if (currentReading || pushingObject) {
-        motor.SetSpeed(BASE_SPEED);
-        motor.Beweeg();
+    // Phase 1: Rotate until object is seen and lost
+    if (rotatingToFind) {
+      if (objectDetected && !foundObject) {
+        seenStart = millis();
+        foundObject = true;
+        Serial1.println("Object detected — tracking...");
+      } else if (!objectDetected && foundObject) {
+        seenEnd = millis();
+        rotatingToFind = false;
+        Serial1.println("Object lost — will rotate back.");
       } else {
-        motor.turn(180, -180);
-        Serial1.println("Searching for object...");
+        motor.turn(240, -240); // keep rotating
       }
-    } else {
-      motor.SetSpeed(BASE_SPEED);
-      motor.Beweeg();
     }
 
-    lastReading = currentReading;
+    // Phase 2: Rotate back for half the time
+    if (!rotatingToFind && !rotatedBack) {
+      unsigned long objectSeenDuration = seenEnd - seenStart;
+      unsigned long rotateBackTime = objectSeenDuration / 2;
+
+      Serial1.print("Rotating back for ");
+      Serial1.print(rotateBackTime);
+      Serial1.println(" ms");
+
+      motor.turn(-240, 240); // opposite direction
+      delay(rotateBackTime);
+      motor.Stop();
+      rotatedBack = true;
+      readyToPush = true;
+      Serial1.println("Ready to push.");
+    }
+
+    // Phase 3: Start pushing
+    if (readyToPush) {
+      motor.SetSpeed(BASE_SPEED);
+      motor.Beweeg();
+      pushingObject = true;
+    }
+
   } else {
-    // Line detected, stop and mark as completed
+    // Line detected — stop
     Serial1.println("Line detected. Reversing...");
     distance = motor.GetEncoderLeft() - 1100;
     motor.SetSpeed(-BASE_SPEED);
@@ -100,3 +110,4 @@ void PushBlock::pushBlock(int BASE_SPEED) {
     Serial1.println("Push sequence complete.");
   }
 }
+

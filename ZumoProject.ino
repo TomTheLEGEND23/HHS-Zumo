@@ -39,12 +39,14 @@ void loop() {
   // Start line following
   if (xbee.isButtonPressed('p')) automationRunning = true;
 
-  if (xbee.isButtonPressed('i')) {
-    pushAutomation = true;
+  if (linefollower.GetLeftGray() && linefollower.GetRightGray()) {
+    WipAutomation = true;
+    automationRunning = false;
   }
 
-  if (xbee.isButtonPressed('u')) {
-    WipAutomation = true;
+  if (linefollower.GetLeftBrown() && linefollower.GetRightBrown()) {
+    pushAutomation = true;
+    automationRunning = false;
   }
 
   // Stop line following
@@ -59,15 +61,23 @@ void loop() {
     linefollower.FollowLine(motor, linesensor, BASE_SPEED, MAX_SPEED, KP);
   }
   if (pushAutomation) {
-    pushblock.pushBlock(300);
-    if (pushblock.completedPushing()) pushAutomation = false;
+    pushblock.pushBlock(250);
+    if (pushblock.completedPushing()) {
+      pushAutomation = false;
+      linefollower.SetLeftBrown(0);
+      linefollower.SetRightBrown(0);
+    }
   }
+
   if (WipAutomation) {
     wipwap.Wippen();
     if (wipwap.completedWippen()) {
-      WipAutomation = false;
-      automationRunning = true;
-      Serial1.println("EndedWipWap");
+      if (wipwap.completedWippen()) {
+        WipAutomation = false;
+        linefollower.SetLeftGray(0);
+        linefollower.SetRightGray(0);
+        automationRunning = true;
+      }
     }
   }
 }

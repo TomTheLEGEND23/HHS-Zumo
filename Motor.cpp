@@ -53,3 +53,8 @@ int Motoren::GetEncoderRight() {
 int Motoren::GetEncoderLeft() {
   return encodertje.getCountsLeft();
 }
+
+void Motoren::ResetEncoder() {
+  encodertje.getCountsAndResetLeft();
+  encodertje.getCountsAndResetRight();
+}

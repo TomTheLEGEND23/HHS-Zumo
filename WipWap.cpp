@@ -9,75 +9,52 @@ WipWap::WipWap()
   : completed(false), distance(0) {}
 
 void WipWap::Wippen() {
+  motor.ResetEncoder();
   completed = false;
-  float pitch = imu.pitch();
-  float absPitch = fabs(pitch);
-  float maxPitch = 0.3;
-  int maxDelay = 500;
-  int minDelay = 100;
+  float pitch = imu.pitch();  // Still use pitch to determine direction
+  int delayTime = 500;        // Fixed delay
 
-  if (absPitch > maxPitch) absPitch = maxPitch;
-
-  int delayTime = maxDelay - (int)((absPitch / maxPitch) * (maxDelay - minDelay));
-  int interval = millis() + 5000;
-
-  Serial1.print("Initial pitch: ");
-  Serial1.println(pitch);
-  Serial1.print("Absolute pitch: ");
-  Serial1.println(absPitch);
-  Serial1.print("Calculated delayTime (ms): ");
-  Serial1.println(delayTime);
-
-  if (pitch > 0.03) {
+  if (pitch > 0.1) {
     distance = motor.GetEncoderLeft() - 3;
-    Serial1.print("Tilting Forward. Target Encoder: ");
-    Serial1.println(distance);
 
     motor.SetSpeed(-200);
     motor.Beweeg();
 
     while (distance < motor.GetEncoderLeft()) {
-      Serial1.print("Encoder value: ");
-      Serial1.println(motor.GetEncoderLeft());
+      // Waiting until encoder reaches target
     }
     motor.Stop();
-    Serial1.println("Stopped after forward movement.");
     delay(delayTime);
-  } else if (pitch < -0.03) {
+  } else if (pitch < -0.1) {
     distance = motor.GetEncoderLeft() + 3;
-    Serial1.print("Tilting Backward. Target Encoder: ");
-    Serial1.println(distance);
 
     motor.SetSpeed(200);
     motor.Beweeg();
 
     while (distance > motor.GetEncoderLeft()) {
-      Serial1.print("Encoder value: ");
-      Serial1.println(motor.GetEncoderLeft());
+      // Waiting until encoder reaches target
     }
     motor.Stop();
-    Serial1.println("Stopped after backward movement.");
     delay(delayTime);
-  } else {
-    Serial1.println("Pitch in neutral range. No tilt movement.");
   }
 
-  while (pitch > -0.03 && pitch < 0.03) {
+  if (pitch > -0.1 && pitch < 0.1) {
     int now = millis();
-    pitch = imu.pitch();
-    Serial1.print("Stabilizing... Pitch: ");
-    Serial1.print(pitch);
-    Serial1.print(" | Time left (ms): ");
-    Serial1.println(interval - now);
+    int interval = millis() + 5000;
+    pitch = imu.pitch();  // Re-check pitch to see if it stabilizes
 
+    while (now < interval && pitch > -0.09 && pitch < 0.09) {
+      now = millis();
+    }
     if (now > interval) {
       completed = true;
-      Serial1.println("Wippen complete.");
+      motor.SetSpeed(200);
+      motor.Beweeg();
+      delay(500);
+      motor.Stop();
       return;
     }
   }
-
-  Serial1.println("Wippen ended due to pitch out of range.");
 }
 
 bool WipWap::completedWippen() {
