@@ -83,9 +83,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: main  # Get the latest main branch with generated docs
-          fetch-depth: 0
-
+          ref: ${{ github.ref }}  # Ensure we get the latest commit with generated docs
+          
       - name: Setup Pages
         uses: actions/configure-pages@v5
         
