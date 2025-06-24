@@ -1,0 +1,99 @@
+# Merged workflow for generating Doxygen documentation and deploying to GitHub Pages
+name: Doxygen Documentation and Pages Deployment
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: 
+      - main
+  
+  # Runs on pull requests when they are closed (merged)
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages and repository commits
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Job to generate Doxygen documentation and commit it back to repository
+  generate-docs:
+    # Only run this job when a PR is merged (not just closed) or on direct pushes
+    if: github.event.pull_request.merged == true || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Get full history, including tags for versioning
+
+      # Step 2: Install the Doxygen tool
+      - name: Set up Doxygen
+        run: sudo apt-get install doxygen
+
+      # Step 3: Generate documentation with Doxygen
+      - name: Generate Doxygen documentation
+        run: doxygen Doxyfile
+
+      # Step 4: Commit and push the generated documentation back to the repository
+      - name: Commit and push documentation
+        run: |
+          # Configure Git with bot identity for the commit
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Stage the documentation files for commit
+          git add ./docs/
+          
+          # Commit the changes (or show message if nothing to commit)
+          git commit -m "Update Doxygen documentation" || echo "No changes to commit"
+          
+          # Push changes back to the branch that triggered this workflow
+          git push origin HEAD:${GITHUB_REF_NAME}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Job to deploy documentation to GitHub Pages (only runs for main branch)
+  deploy-pages:
+    # Only deploy to Pages when pushing to main branch
+    if: (github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main') || (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    needs: generate-docs
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main  # Get the latest main branch with generated docs
+          fetch-depth: 0
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs/html'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
